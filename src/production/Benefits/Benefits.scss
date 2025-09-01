@@ -1,0 +1,75 @@
+$margin: 40px;
+$margin-locals: 60px;
+
+.info-ecomerce {
+  width: 100%;
+
+  .benefits {
+    width: 100%;
+    margin: $margin 0 $margin 0;
+    display: flex;
+    flex-direction: column;
+
+    .benefits__container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .benefit-div {
+        width: 33.33%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          .icon-benefit {
+            font-size: 30px;
+            margin: 0 0 14px 0;
+            color: black;
+          }
+        }
+
+        .benefit-title {
+          margin: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          p {
+            text-align: center;
+            color: black;
+            font-size: 14px;
+          }
+        }
+
+        .benefit-detail {
+          margin: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          p {
+            text-align: center;
+            color: #999999;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    .locals {
+      width: 100%;
+      margin: $margin-locals 0 0 0;
+
+      .image-locals {
+        width: 100%;
+      }
+    }
+  }
+}

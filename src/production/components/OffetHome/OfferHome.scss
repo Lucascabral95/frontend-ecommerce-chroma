@@ -1,0 +1,22 @@
+$margin-content: 2vw 0;
+
+.offer-home {
+  width: 100%;
+  margin: $margin-content;
+
+  .offer-home__container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .image-container {
+      width: 49.5%;
+
+      .image-inside {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}

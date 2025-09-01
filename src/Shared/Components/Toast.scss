@@ -1,0 +1,86 @@
+// Toast.scss
+$margin-bottom: 24px;
+$margin-right: 24px;
+$animation-duration: 0.3s;
+$easing: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.toast {
+  position: fixed;
+  bottom: $margin-bottom;
+  right: $margin-right;
+  z-index: 1000;
+  animation: slideIn $animation-duration $easing forwards;
+
+  &--exiting {
+    animation: slideOut $animation-duration $easing forwards;
+  }
+
+  .toast__container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    transform-origin: right center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .text-error {
+      color: #d32f2f;
+    }
+
+    .text-success {
+      color: #2e7d32;
+    }
+
+    &::before {
+      content: "";
+      display: block;
+      width: 6px;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 12px 0 0 12px;
+    }
+
+    &[style*="error"]::before {
+      background: #d32f2f;
+    }
+
+    &[style*="success"]::before {
+      background: #2e7d32;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+}

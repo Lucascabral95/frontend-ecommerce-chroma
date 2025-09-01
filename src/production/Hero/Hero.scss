@@ -1,0 +1,20 @@
+.hero {
+  position: relative;
+  width: 100%;
+  margin: 20px 0;
+
+  .imagesHero {
+    width: 100%;
+
+    .imageHeroInterior {
+      width: 100vw;
+      height: auto;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .imagesHero {
+    height: auto;
+  }
+}

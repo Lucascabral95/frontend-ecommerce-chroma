@@ -1,0 +1,280 @@
+$margin-text: 0 0 20px 0;
+$margin-login: 30px 0 8vw 0;
+
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+
+.login {
+  width: 100%;
+  margin: $margin-login;
+
+  .login__container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2%;
+
+    .login,
+    .register {
+      background-color: white;
+      width: 49%;
+      padding: 35px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+
+      h3 {
+        color: black;
+        font-size: 24px;
+        margin: $margin-text;
+      }
+
+      p {
+        color: black;
+        font-size: 14px;
+        margin: $margin-text;
+      }
+    }
+
+    .login {
+      .formulario {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .form-control {
+        display: flex;
+        flex-direction: column;
+        margin: 0 0 30px 0;
+
+        label {
+          color: black;
+          font-size: 14px;
+          margin: 0 0 4px 0;
+        }
+
+        input {
+          font-size: 14px;
+          border: 1px solid #dddddd;
+          padding: 10px 12px;
+
+          &:focus {
+            outline: none;
+          }
+          &::placeholder {
+            color: #999999;
+          }
+        }
+
+        .map-error-text {
+          display: flex;
+          flex-direction: column;
+
+          .text-text-error {
+            color: red;
+            font-size: 12px;
+            margin: 2px 0 0 0;
+          }
+        }
+
+        .text-text-error {
+          color: red;
+          font-size: 12px;
+          margin: 2px 0 0 0;
+        }
+      }
+
+      .form-control-button {
+        margin-top: auto;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        button {
+          padding: 12px 40px;
+          color: white;
+          cursor: pointer;
+          border: none;
+          background-color: black;
+          font-size: 14px;
+
+          &:hover {
+            opacity: 0.8;
+            transition: 0.3s ease;
+          }
+        }
+      }
+    }
+
+    .register {
+      .list-link {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .list-benefits {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        gap: 4%;
+        margin: 0 0 30px 0;
+
+        li {
+          flex: 1 1 48%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          border: 1px solid #dddddd;
+          min-height: 90px;
+          padding: 10px;
+
+          .icono {
+            margin: 0 0 5px 0;
+
+            .icon {
+              width: 30px;
+              height: 30px;
+              color: black;
+            }
+          }
+
+          .text-list-benefits {
+            color: black;
+            font-size: 12px;
+            margin: 0;
+            text-align: center;
+          }
+        }
+      }
+
+      .cont-link-register {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        .link-register {
+          padding: 12px 40px;
+          color: white;
+          cursor: pointer;
+          border: none;
+          background-color: black;
+          font-size: 14px;
+
+          &:hover {
+            opacity: 0.8;
+            transition: 0.3s ease;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: $bp-lg) {
+    .login__container {
+      gap: 20px;
+
+      .login,
+      .register {
+        padding: 28px;
+
+        h3 {
+          font-size: 22px;
+        }
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: $bp-md) {
+    .login__container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+
+      .login,
+      .register {
+        width: 100%;
+        padding: 24px;
+      }
+
+      .register .list-benefits {
+        gap: 12px;
+        li {
+          min-height: 80px;
+          .icono .icon {
+            width: 26px;
+            height: 26px;
+          }
+          .text-list-benefits {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: $bp-sm) {
+    .login__container {
+      .login,
+      .register {
+        padding: 18px;
+
+        h3 {
+          font-size: 20px;
+          margin: 0 0 14px 0;
+        }
+        p {
+          font-size: 13px;
+          margin: 0 0 16px 0;
+        }
+      }
+
+      .login .form-control {
+        margin: 0 0 18px 0;
+
+        label {
+          font-size: 13px;
+        }
+        input {
+          font-size: 14px;
+          padding: 10px;
+        }
+      }
+
+      .register .list-benefits {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin: 0 0 16px 0;
+
+        li {
+          width: 100%;
+          min-height: 72px;
+          .text-list-benefits {
+            font-size: 12px;
+          }
+        }
+      }
+
+      .form-control-button button,
+      .cont-link-register .link-register {
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+      }
+    }
+  }
+}
