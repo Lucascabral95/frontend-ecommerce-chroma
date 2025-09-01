@@ -1,61 +1,55 @@
+$bp-padding__subcribe: 0 0px;
+
 .subscribe {
   width: 100%;
   background-color: black;
-  height: 80px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: auto;
+  padding: 20px 0;
 
   .subscribe__container {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: $bp-padding__subcribe;
+    flex-direction: column;
+    gap: 20px;
 
     .detail {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0 20px;
-
+      margin: 0;
       .text {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
         .detail-text {
           color: white;
           font-size: 18px;
+          white-space: normal;
+          text-align: center;
         }
       }
     }
 
     .input-subscribe {
       display: flex;
-      justify-content: center;
       align-items: center;
-      margin: 0 20px;
       border: 2.2px solid #999999;
       padding: 0 0 0 14px;
       height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
+      width: 90%;
       max-width: 364px;
 
       .in {
         width: 100%;
-
         .input {
           width: 100%;
           border: none;
           outline: none;
           background: transparent;
           color: #999999;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
+          height: 100%;
+          font-size: 14px;
           &::placeholder {
             color: #999999;
             font-size: 14px;
@@ -65,15 +59,39 @@
 
       .icon {
         width: 40px;
-        height: 40px;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-
+        cursor: pointer;
         .icon-send {
           font-size: 20px;
           color: white;
         }
+      }
+    }
+  }
+
+  @media (min-width: 576px) {
+    height: 80px;
+    padding: 0;
+
+    .subscribe__container {
+      flex-direction: row;
+      gap: 0;
+
+      .detail {
+        margin: 0 20px;
+        .text {
+          .detail-text {
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .input-subscribe {
+        margin: 0 20px;
+        width: 100%;
       }
     }
   }

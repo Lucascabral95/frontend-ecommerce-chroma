@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./Modal.scss";
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 
 interface Props {
   close?: () => void;
@@ -10,9 +10,13 @@ interface Props {
 
 function Modal({ close }: Props) {
   return (
-    <div className="modal-cart">
-      <div className="modal-cart__container">
+    <div className="modal-cart" onClick={() => close?.()}>
+      <div
+        className="modal-cart__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="titulo">
+          <IoIosArrowBack className="icon-back" onClick={() => close?.()} />
           <h3 className="tit"> Mi carrito </h3>
           <IoMdClose className="icon" onClick={() => close?.()} />
         </div>

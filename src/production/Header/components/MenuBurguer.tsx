@@ -3,13 +3,18 @@ import React from "react";
 import "./MenuBurguer.scss";
 
 import Link from "next/link";
+import MenuBurguerMobile from "./MenuBurguerMobile";
 
 interface Sections {
   url: string;
   name: string;
 }
 
-function MenuBurguer() {
+interface Props {
+  close: () => void;
+}
+
+function MenuBurguer({ close }: Props) {
   const sections: Sections[] = [
     { url: "/", name: "INDUMENTARIA" },
     { url: "/accesorios", name: "ACCESORIOS" },
@@ -21,21 +26,24 @@ function MenuBurguer() {
   ];
 
   return (
-    <div className="men-bur">
-      <div className="menu-burguer">
-        <div className="menu-burguer__container">
-          <ul>
-            {sections.map((item, index) => {
-              return (
-                <li key={index}>
-                  <Link href={item.url}> {item.name} </Link>
-                </li>
-              );
-            })}
-          </ul>
+    <>
+      <div className="men-bur">
+        <div className="menu-burguer">
+          <div className="menu-burguer__container">
+            <ul>
+              {sections.map((item, index) => {
+                return (
+                  <li key={index}>
+                    <Link href={item.url}> {item.name} </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+      <MenuBurguerMobile close={() => close()} />
+    </>
   );
 }
 

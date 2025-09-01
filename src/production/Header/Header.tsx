@@ -53,7 +53,7 @@ function Header() {
           </div>
         </header>
       </SectionStructure>
-      {menuClose && <MenuBurguer />}
+      {menuClose && <MenuBurguer close={() => setMenuClose(false)} />}
       {searchClose && <Search />}
       {cartClose && <Modal close={() => setCartClose(false)} />}
     </div>

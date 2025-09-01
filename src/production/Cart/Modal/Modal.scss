@@ -1,3 +1,6 @@
+$bp-md: 768px;
+$width-modal-mobile: 94%;
+
 .modal-cart {
   position: fixed;
   margin: 0;
@@ -36,6 +39,14 @@
         color: black;
       }
 
+      .icon-back {
+        display: none;
+        cursor: pointer;
+        font-size: 22px;
+        color: black;
+        margin: 0 10px 0 0;
+      }
+
       .icon {
         cursor: pointer;
         font-size: 24px;
@@ -56,6 +67,41 @@
         p {
           color: black;
           font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $bp-md) {
+  .modal-cart {
+    &__container {
+      width: $width-modal-mobile;
+      height: 100vh;
+      max-width: none;
+
+      .titulo {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .tit {
+          margin: 0;
+        }
+
+        .icon-back {
+          display: block;
+        }
+
+        .icon {
+          display: none;
+        }
+      }
+
+      .body-cart {
+        .cart-empty {
+          p {
+          }
         }
       }
     }

@@ -1,3 +1,5 @@
+$bp-md: 768px;
+
 .hero {
   position: relative;
   width: 100%;
@@ -7,14 +9,19 @@
     width: 100%;
 
     .imageHeroInterior {
-      width: 100vw;
+      width: 100%;
       height: auto;
     }
   }
 }
 
-@media (min-width: 1024px) {
-  .imagesHero {
-    height: auto;
+@media (max-width: $bp-md) {
+  .hero {
+    .imagesHero {
+      .imageHeroInterior {
+        width: 100%;
+        height: auto;
+      }
+    }
   }
 }

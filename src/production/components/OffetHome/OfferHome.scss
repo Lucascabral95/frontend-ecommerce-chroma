@@ -1,4 +1,6 @@
 $margin-content: 2vw 0;
+$margin-content-mobile: 0vw 0;
+$bp-md: 768px;
 
 .offer-home {
   width: 100%;
@@ -16,6 +18,22 @@ $margin-content: 2vw 0;
       .image-inside {
         width: 100%;
         height: auto;
+      }
+    }
+  }
+}
+
+@media (max-width: $bp-md) {
+  .offer-home {
+    margin: $margin-content-mobile;
+
+    .offer-home__container {
+      width: 100%;
+      flex-direction: column;
+
+      .image-container {
+        width: 100%;
+        margin: 10px 0 0 0;
       }
     }
   }

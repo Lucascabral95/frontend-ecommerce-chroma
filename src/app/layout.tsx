@@ -37,9 +37,9 @@ export default function RootLayout({
         <StoreInitializer>
           <TansTackQueryGlobal>
             <Header />
-            {/* <main className="grow">{children}</main>
+            <main className="grow">{children}</main>
             <Subscribe />
-            <Footer /> */}
+            <Footer />
           </TansTackQueryGlobal>
         </StoreInitializer>
       </body>

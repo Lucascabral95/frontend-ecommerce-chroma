@@ -1,0 +1,81 @@
+$card-gap: 16px;
+$margin-base: 75px 0 0 0;
+$padding-base: 0 0 20px 0;
+
+.card-carousel {
+  display: flex;
+  gap: $card-gap;
+  width: 100%;
+  margin: $margin-base;
+  padding: $padding-base;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  &.dragging {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    cursor: grabbing;
+  }
+
+  .card-item {
+    scroll-snap-align: start;
+    pointer-events: none;
+    button,
+    a,
+    input,
+    textarea,
+    [role="button"],
+    [tabindex] {
+      pointer-events: auto;
+    }
+
+    flex: 0 0 auto;
+    width: calc(25% - (#{$card-gap} * 3 / 4));
+
+    @media (max-width: 1200px) {
+      width: calc(33.333% - (#{$card-gap} * 2 / 3));
+    }
+
+    @media (max-width: 768px) {
+      width: calc(50% - (#{$card-gap} / 2));
+    }
+
+    @media (max-width: 480px) {
+      width: calc(80%);
+    }
+  }
+}
+
+img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.card-carousel:hover {
+  .card-item {
+    transition: transform 0.2s ease;
+  }
+}
+
+.card-carousel:not(.dragging) {
+  .card-item:hover {
+    transform: translateY(-4px);
+  }
+}

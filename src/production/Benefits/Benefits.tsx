@@ -8,6 +8,7 @@ import { MdOutlineStorefront } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
+import BenefitsMobile from "./BenefitsMobile";
 
 interface Benefits {
   icon: React.ReactNode;
@@ -35,36 +36,39 @@ function Benefits() {
   ];
 
   return (
-    <section className="info-ecomerce">
-      <SectionStructure>
-        <div className="benefits">
-          <div className="benefits__container">
-            {benefits.map((benefit, index) => (
-              <div className="benefit-div" key={index}>
-                <div className="icon">{benefit.icon}</div>
-                <div className="benefit-title">
-                  <p>{benefit.title}</p>
+    <>
+      <section className="info-ecomerce">
+        <SectionStructure>
+          <div className="benefits">
+            <div className="benefits__container">
+              {benefits.map((benefit, index) => (
+                <div className="benefit-div" key={index}>
+                  <div className="icon">{benefit.icon}</div>
+                  <div className="benefit-title">
+                    <p>{benefit.title}</p>
+                  </div>
+                  <div className="benefit-detail">
+                    <p>{benefit.detail}</p>
+                  </div>
                 </div>
-                <div className="benefit-detail">
-                  <p>{benefit.detail}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="locals">
+              <Link href="/">
+                <Image
+                  src="/img/locales-store.webp"
+                  alt="Locales"
+                  width={1200}
+                  height={300}
+                  className="image-locals"
+                />
+              </Link>
+            </div>
           </div>
-          <div className="locals">
-            <Link href="/">
-              <Image
-                src="/img/locales-store.webp"
-                alt="Locales"
-                width={1200}
-                height={300}
-                className="image-locals"
-              />
-            </Link>
-          </div>
-        </div>
-      </SectionStructure>
-    </section>
+        </SectionStructure>
+      </section>
+      <BenefitsMobile benefits={benefits} />
+    </>
   );
 }
 

@@ -2,6 +2,7 @@
 import SectionStructure from "@/production/Section/SectionStructure";
 import React from "react";
 import Image from "next/image";
+
 import "./SectionOffers.scss";
 
 function SectionOffers() {
