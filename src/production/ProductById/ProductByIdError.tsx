@@ -1,8 +1,9 @@
 import React from "react";
 import SectionStructure from "@/production/Section/SectionStructure";
 import Link from "next/link";
-import { FaExclamationTriangle } from "react-icons/fa"; // Importa un ícono
-import "./ProductByIdError.scss";
+import { FaExclamationTriangle } from "react-icons/fa";
+
+import "./ProductById.scss";
 
 function ProductByIdError() {
   return (
