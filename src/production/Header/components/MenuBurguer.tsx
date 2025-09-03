@@ -1,29 +1,17 @@
 import React from "react";
 
-import "./MenuBurguer.scss";
-
 import Link from "next/link";
 import MenuBurguerMobile from "./MenuBurguerMobile";
+import categories from "@/lib/Categories";
 
-interface Sections {
-  url: string;
-  name: string;
-}
+import "./MenuBurguer.scss";
 
 interface Props {
   close: () => void;
 }
 
 function MenuBurguer({ close }: Props) {
-  const sections: Sections[] = [
-    { url: "/", name: "INDUMENTARIA" },
-    { url: "/accesorios", name: "ACCESORIOS" },
-    { url: "/promociones", name: "PROMOCIONES" },
-    { url: "/contacto", name: "CONTACTO" },
-    { url: "/nosotros", name: "NOSOTROS" },
-    { url: "/carrito", name: "CARRITO" },
-    { url: "/mi-cuenta", name: "MI CUENTA" },
-  ];
+  const sections = categories;
 
   return (
     <>
@@ -33,7 +21,7 @@ function MenuBurguer({ close }: Props) {
             <ul>
               {sections.map((item, index) => {
                 return (
-                  <li key={index}>
+                  <li key={index} onClick={() => close()}>
                     <Link href={item.url}> {item.name} </Link>
                   </li>
                 );

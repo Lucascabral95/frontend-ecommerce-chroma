@@ -2,12 +2,11 @@ import axiosInstance from "@/Insfraestructure/Api/Axios-config";
 import {
   Product,
   ProductFilter,
-  ProductsInterface,
 } from "@/Insfraestructure/Interfaces/products/product.interface";
 
 export async function getProducts(filter: ProductFilter) {
   try {
-    const { data } = await axiosInstance.get<ProductsInterface[]>("/products", {
+    const { data } = await axiosInstance.get("/products", {
       params: filter,
     });
     console.log(data);

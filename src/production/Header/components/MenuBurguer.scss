@@ -33,6 +33,7 @@ $padding-section-footer: 15px 20px;
           padding: 0 0 0 5px;
           position: relative;
           display: inline-block;
+          text-transform: uppercase;
           cursor: pointer;
 
           &::after {

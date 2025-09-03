@@ -1,10 +1,13 @@
 "use client";
 import { getProductById, getProducts } from "@/lib/products.api";
 import { useQuery } from "@tanstack/react-query";
-import { ProductFilter } from "@/Insfraestructure/Interfaces/products/product.interface";
+import {
+  ProductFilter,
+  ProductsInterface,
+} from "@/Insfraestructure/Interfaces/products/product.interface";
 
 const useProducts = (id?: string, filter?: ProductFilter) => {
-  const products = useQuery({
+  const products = useQuery<ProductsInterface>({
     queryKey: ["products", filter],
     queryFn: async () => await getProducts(filter || {}),
     refetchOnWindowFocus: false,
