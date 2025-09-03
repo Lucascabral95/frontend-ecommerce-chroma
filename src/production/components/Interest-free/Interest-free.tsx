@@ -6,11 +6,12 @@ import SectionStructure from "@/production/Section/SectionStructure";
 import "./interest-free.scss";
 
 function InterestFree() {
-  const [widthDynamic, setWidthDynamic] = useState(window.innerWidth);
-
   const bpMd = 768;
+  const [widthDynamic, setWidthDynamic] = useState(1024);
 
   useEffect(() => {
+    setWidthDynamic(window.innerWidth);
+
     const handleResize = () => setWidthDynamic(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

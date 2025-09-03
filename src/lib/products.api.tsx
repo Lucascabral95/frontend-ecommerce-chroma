@@ -1,9 +1,15 @@
 import axiosInstance from "@/Insfraestructure/Api/Axios-config";
-import { ProductFilter } from "@/Insfraestructure/Interfaces/products/product.interface";
+import {
+  Product,
+  ProductFilter,
+  ProductsInterface,
+} from "@/Insfraestructure/Interfaces/products/product.interface";
 
 export async function getProducts(filter: ProductFilter) {
   try {
-    const { data } = await axiosInstance.get("/products", { params: filter });
+    const { data } = await axiosInstance.get<ProductsInterface[]>("/products", {
+      params: filter,
+    });
     console.log(data);
 
     return data;
@@ -14,7 +20,7 @@ export async function getProducts(filter: ProductFilter) {
 
 export async function getProductById(id: string) {
   try {
-    const { data } = await axiosInstance.get(`/products/${id}`);
+    const { data } = await axiosInstance.get<Product>(`/products/${id}`);
     console.log(data);
 
     return data;

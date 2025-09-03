@@ -1,0 +1,76 @@
+$margin-desktop: 16px 0;
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop: 1200px;
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@keyframes sk-shimmer {
+  0% {
+    background-position-x: 200%;
+  }
+  100% {
+    background-position-x: 0%;
+  }
+}
+
+@mixin shimmer {
+  background: linear-gradient(100deg, #ececf1 40%, #f6f7fb 50%, #ececf1 60%);
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-products {
+  width: 100%;
+  margin: $margin-desktop;
+
+  &__container {
+    display: grid;
+    gap: 24px;
+
+    grid-template-columns: 1fr;
+
+    @media (min-width: $bp-mobile) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $bp-tablet) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (min-width: $bp-desktop) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .skeleton-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    &__media {
+      aspect-ratio: 1 / 1;
+      @include shimmer;
+    }
+    &__title {
+      height: 2.4em;
+      @include shimmer;
+    }
+    &__price {
+      height: 1.2em;
+      width: 55%;
+      @include shimmer;
+    }
+    &__installments {
+      height: 36px;
+      @include shimmer;
+    }
+  }
+}

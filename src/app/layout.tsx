@@ -6,6 +6,7 @@ import Header from "@/production/Header/Header";
 import Footer from "@/production/components/Footer/Footer";
 import Subscribe from "@/production/Benefits/Subscribe/Subscribe";
 import { StoreInitializer } from "@/providers/zustand.provider";
+import MarqueeBanner from "@/production/components/Marquee/Maraquee";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
       >
         <StoreInitializer>
           <TansTackQueryGlobal>
+            <MarqueeBanner />
             <Header />
             <main className="grow">{children}</main>
             <Subscribe />

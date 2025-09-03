@@ -1,0 +1,27 @@
+$margin: 0 0 8px 0;
+
+.marquee {
+  width: 100%;
+  margin: $margin;
+  background-color: #000;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+
+  &__container {
+    width: 100%;
+  }
+
+  :where(span, p, strong) {
+    display: block;
+    line-height: 40px;
+  }
+}
