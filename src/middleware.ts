@@ -3,7 +3,8 @@ import type { NextRequest } from 'next/server';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 const loginRegisterPaths = ['/customer/account/login', '/customer/account/create'];
-const routesProtecteds = ['/customer/account/cart', '/customer/account/settings'];
+// const routesProtecteds = ['/customer/account/cart', '/customer/account/profile'];
+const routesProtecteds = ['jnsadk'];
 const routeRedirectInMatch = '/'
 
 const KEY_JWT = process.env.KEY_JWT || 'defaultJwtKey';
@@ -25,8 +26,6 @@ export function middleware(request: NextRequest) {
     try {
       const payload = jwtDecode<JwtPayload>(token);
       const currentTime = Date.now() / 1000;
-
-      console.log(`Esto viene del middleware ${JSON.stringify(payload)}`);
 
       isTokenValid = payload.exp ? payload.exp > currentTime : true;
     } catch (error) {

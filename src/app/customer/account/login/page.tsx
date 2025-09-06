@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 
-import "./login.scss";
 import SectionStructure from "@/production/Section/SectionStructure";
 import { TbShoppingCartCheck } from "react-icons/tb";
 import { FaRegSave } from "react-icons/fa";
@@ -13,6 +12,8 @@ import { z } from "zod";
 import useAuthStore from "@/lib/zustand/AuthZustand";
 import { useRouter } from "next/navigation";
 import Toast from "@/Shared/Components/Toast";
+
+import "./login.scss";
 
 interface Benefits {
   icon: React.ReactNode;

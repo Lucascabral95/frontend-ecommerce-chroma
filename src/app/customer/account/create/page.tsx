@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 
 import { z } from "zod";
 
@@ -9,15 +8,24 @@ import Link from "next/link";
 import { useState } from "react";
 import { Errors } from "@/Insfraestructure/Interfaces/Errors/Errors";
 import { registerUser } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
+import Toast from "@/Shared/Components/Toast";
 import "./create.scss";
+
+const TIME_TO_CLOSE_TOAST = 1800;
 
 function CreateUser() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [errors, setErrors] = useState<Errors | null>(null);
+  const [toastMessage, setToastMessage] = useState({
+    message: "",
+    error: false,
+  });
+
+  const router = useRouter();
 
   const [errorEmail, setErrorEmail] = useState<string>("");
   const [errorsPassword, setErrorsPassword] = useState<string[]>([]);
@@ -66,16 +74,25 @@ function CreateUser() {
     try {
       const res = await registerUser({ email, hashedPassword: password, name });
 
-      if (res.status === 200) {
+      if (res) {
         setEmail("");
         setPassword("");
         setName("");
-        redirect("/customer/account/login");
+
+        setToastMessage({ message: "Registro exitoso", error: false });
+
+        setTimeout(() => {
+          setToastMessage({ message: "", error: false });
+          router.push("/customer/account/login");
+        }, TIME_TO_CLOSE_TOAST);
       }
     } catch (e) {
-      console.log(e);
       const err = e as Errors;
       setErrors(err);
+      setToastMessage({ message: err.message, error: true });
+      setTimeout(() => {
+        setToastMessage({ message: "", error: false });
+      }, TIME_TO_CLOSE_TOAST);
     }
   };
 
@@ -158,6 +175,10 @@ function CreateUser() {
           </div>
         </div>
       </div>
+
+      {toastMessage.message && (
+        <Toast message={toastMessage.message} error={toastMessage.error} />
+      )}
     </SectionStructure>
   );
 }
