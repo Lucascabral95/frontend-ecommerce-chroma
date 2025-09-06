@@ -9,7 +9,6 @@ export async function getProducts(filter: ProductFilter) {
     const { data } = await axiosInstance.get("/products", {
       params: filter,
     });
-    console.log(data);
 
     return data;
   } catch (error) {
@@ -20,7 +19,6 @@ export async function getProducts(filter: ProductFilter) {
 export async function getProductById(id: string) {
   try {
     const { data } = await axiosInstance.get<Product>(`/products/${id}`);
-    console.log(data);
 
     return data;
   } catch (error) {

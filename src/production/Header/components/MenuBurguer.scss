@@ -81,14 +81,17 @@ $padding-section-footer: 15px 20px;
     flex-direction: column;
 
     .ul-section {
+      width: 100%;
       display: flex;
       flex-direction: column;
 
       .link-section {
         display: flex;
         align-items: center;
+        width: 100%;
 
         .li-section-ingresar {
+          width: 100%;
           font-size: 16px;
           padding: $padding-section-menu-burguer-mobile;
           display: flex;
@@ -109,6 +112,17 @@ $padding-section-footer: 15px 20px;
           p {
             font-size: 16px;
           }
+        }
+      }
+
+      .link-logout-access {
+        color: white;
+        font-weight: bold;
+        background-color: black;
+
+        &:hover {
+          transition: opacity 0.3s ease;
+          opacity: 0.9;
         }
       }
 

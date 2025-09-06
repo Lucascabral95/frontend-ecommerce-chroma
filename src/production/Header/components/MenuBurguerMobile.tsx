@@ -1,9 +1,11 @@
 "use client";
 import React from "react";
 
-import "./MenuBurguer.scss";
-import { CiUser } from "react-icons/ci";
+import { CiLogin, CiUser } from "react-icons/ci";
 import Link from "next/link";
+import useAuthStore from "@/lib/zustand/AuthZustand";
+
+import "./MenuBurguer.scss";
 
 interface Section {
   url: string;
@@ -16,10 +18,18 @@ interface Props {
 }
 
 function MenuBurguerMobile({ close }: Props) {
+  const { userDataSession, logout } = useAuthStore();
+
   const ingresar: Section = {
     url: "/customer/account/login",
     name: "INGRESAR",
     icon: <CiUser className="icon" />,
+  };
+
+  const logoutSection: Section = {
+    url: "/",
+    name: "CERRAR SESIÓN",
+    icon: <CiLogin className="icon" />,
   };
 
   const sections: Section[] = [
@@ -41,15 +51,23 @@ function MenuBurguerMobile({ close }: Props) {
       >
         <ul className="ul-section">
           <Link
-            href={ingresar.url}
-            className="link-section"
-            onClick={() => close()}
+            href={userDataSession ? logoutSection.url : ingresar.url}
+            className="link-section link-logout-access"
+            onClick={userDataSession ? logout : () => close()}
           >
             <li className="li-section-ingresar">
-              <div className="icono">{ingresar.icon}</div>
-              <p>{ingresar.name}</p>
+              <div className="icono">
+                {userDataSession ? logoutSection.icon : ingresar.icon}
+              </div>
+              <p>{userDataSession ? logoutSection.name : ingresar.name}</p>
             </li>
           </Link>
+
+          <h1 style={{ textAlign: "center", fontSize: "32px", color: "red" }}>
+            {" "}
+            Hola, {userDataSession?.name}{" "}
+          </h1>
+
           {sections.map((item, index) => {
             return (
               <Link

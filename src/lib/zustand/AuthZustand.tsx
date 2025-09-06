@@ -35,7 +35,8 @@ const useAuthStore = create<AuthStore>((set) => ({
 
   setJwt: (jwt: string) => {
     if (typeof window !== "undefined") {
-      localStorage.setItem(KEY_JWT, jwt);
+      // localStorage.setItem(KEY_JWT, jwt);
+      document.cookie = `${KEY_JWT}=${jwt}; path=/; Secure; SameSite=Strict;`;
     }
 
     const decodedJwt = decodeJwt(jwt);
@@ -47,7 +48,12 @@ const useAuthStore = create<AuthStore>((set) => ({
 
   initializeFromStorage: () => {
     if (typeof window !== "undefined") {
-      const savedJwt = localStorage.getItem(KEY_JWT) || "";
+      // const savedJwt = localStorage.getItem(KEY_JWT) || "";
+      const savedJwt =
+        document.cookie
+          .split(";")
+          .find((cookie) => cookie.startsWith(`${KEY_JWT}=`))
+          ?.split("=")[1] || "";
 
       const decodedJwt = savedJwt ? decodeJwt(savedJwt) : null;
 
@@ -60,7 +66,8 @@ const useAuthStore = create<AuthStore>((set) => ({
 
   logout: () => {
     if (typeof window !== "undefined") {
-      localStorage.removeItem(KEY_JWT);
+      // localStorage.removeItem(KEY_JWT);
+      document.cookie = `${KEY_JWT}=; Max-Age=0; path=/; Secure; SameSite=Strict;`;
     }
     set(() => ({ jwt: "", userDataSession: null }));
   },
