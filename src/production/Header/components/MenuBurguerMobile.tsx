@@ -63,11 +63,6 @@ function MenuBurguerMobile({ close }: Props) {
             </li>
           </Link>
 
-          <h1 style={{ textAlign: "center", fontSize: "32px", color: "red" }}>
-            {" "}
-            Hola, {userDataSession?.name}{" "}
-          </h1>
-
           {sections.map((item, index) => {
             return (
               <Link

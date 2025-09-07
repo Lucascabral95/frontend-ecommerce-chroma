@@ -8,15 +8,32 @@ import { CiMenuBurger, CiShoppingCart, CiUser } from "react-icons/ci";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 
-import "./Header.scss";
 import MenuBurguer from "./components/MenuBurguer";
 import Search from "./components/Search";
 import Modal from "../Cart/Modal/Modal";
+import { useRouter, usePathname } from "next/navigation";
+
+import "./Header.scss";
+import useAuthStore from "@/lib/zustand/AuthZustand";
+import { useCartStore } from "@/lib/zustand/CartZustand";
 
 function Header() {
   const [menuClose, setMenuClose] = useState(false);
   const [searchClose, setSearchClose] = useState(false);
   const [cartClose, setCartClose] = useState<boolean>(false);
+  const router = useRouter();
+  const pathName = usePathname();
+
+  const { userDataSession } = useAuthStore();
+  const { cart } = useCartStore();
+
+  const handleCart = () => {
+    if (pathName === "/checkout/cart") {
+      setCartClose(!cartClose);
+    } else {
+      router.push("/checkout/cart");
+    }
+  };
 
   return (
     <div className="header-exterior">
@@ -44,11 +61,22 @@ function Header() {
                 <HiMagnifyingGlass className="icon" />
               )}
             </div>
-            <Link href="/customer/account/login" className="icono icono-user">
+            <Link
+              href={
+                userDataSession
+                  ? "/customer/account/profile"
+                  : "/customer/account/login"
+              }
+              className="icono icono-user"
+            >
               <CiUser className="icon" />
             </Link>
-            <div className="icono" onClick={() => setCartClose(!cartClose)}>
+            <div className="icono" onClick={() => handleCart()}>
               <CiShoppingCart className="icon" />
+              {cart?.items?.length ||
+                (0 > 0 && (
+                  <span className="cart-count">{cart?.items?.length || 0}</span>
+                ))}
             </div>
           </div>
         </header>

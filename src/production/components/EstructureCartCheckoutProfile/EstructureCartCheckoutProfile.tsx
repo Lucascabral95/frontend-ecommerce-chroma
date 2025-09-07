@@ -2,8 +2,9 @@ import { ReactNode } from "react";
 
 import SectionStructure from "@/production/Section/SectionStructure";
 
-import "./EstructureCartCheckoutProfile.scss";
 import Toast from "@/Shared/Components/Toast";
+
+import "./EstructureCartCheckoutProfile.scss";
 
 interface Props {
   children: ReactNode;
@@ -20,7 +21,7 @@ function EstructureCartCheckoutProfile({
 }: Props) {
   return (
     <SectionStructure background={background}>
-      <div className="estructure-cart-checkout-profile">
+      <div className="estructure-cart-checkout-profile" style={{ background }}>
         <div className="estructure-cart-checkout-profile__container">
           <div className="cont">
             <div className="title">

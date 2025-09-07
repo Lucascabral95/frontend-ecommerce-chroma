@@ -12,16 +12,26 @@ import ProductByIdLoading from "@/production/ProductById/ProductByIdLoading";
 import ProductByIdError from "@/production/ProductById/ProductByIdError";
 
 import "./ProductId.scss";
+import { useCartStore } from "@/lib/zustand/CartZustand";
+import Toast from "@/Shared/Components/Toast";
+
+const TOAST_TIME = 1800;
 
 function ProductID() {
   const { id } = useParams();
   const [quantity, setQuantity] = useState<number>(1);
   const [sizeSelected, setSizeSelected] = useState<Size | null>(null);
   const [stockLimit, setStockLimit] = useState<number>(0);
+  const [toastMessage, setToastMessage] = useState<{
+    message: string;
+    error: boolean;
+  }>({ message: "", error: false });
 
   const {
     productById: { data: productById, isLoading, isError },
   } = useProducts(id as string);
+
+  const { cart, addToCart } = useCartStore();
 
   const aumentarCantidad = () => {
     if (quantity < stockLimit) {
@@ -44,20 +54,48 @@ function ProductID() {
   };
 
   if (isLoading) {
-    return (
-      <SectionStructure>
-        <ProductByIdLoading />
-      </SectionStructure>
-    );
+    return <ProductByIdLoading detail="producto" />;
   }
 
   if (isError || !productById) {
     return (
-      <SectionStructure>
-        <ProductByIdError />
-      </SectionStructure>
+      <ProductByIdError
+        title="Error al Cargar el Producto"
+        description="Lo sentimos, no pudimos encontrar el producto que buscas. Por favor, revisa la URL o intenta de nuevo."
+      />
     );
   }
+
+  const handleAddToCart = (variantId: string) => {
+    if (sizeSelected && cart?.id) {
+      addToCart(cart.id, variantId, cart.userId, {
+        quantity: 1,
+        cartId: cart.id,
+        variantId: variantId,
+      });
+      setToastMessage({
+        message: "Producto agregado al carrito",
+        error: false,
+      });
+      setTimeout(
+        () => setToastMessage({ message: "", error: false }),
+        TOAST_TIME
+      );
+    } else {
+      console.error(
+        "No se puede agregar al carrito: tamaño no seleccionado o carrito no disponible"
+      );
+      setToastMessage({
+        message:
+          "No se puede agregar al carrito: tamaño no seleccionado o carrito no disponible",
+        error: true,
+      });
+      setTimeout(
+        () => setToastMessage({ message: "", error: false }),
+        TOAST_TIME
+      );
+    }
+  };
 
   return (
     <SectionStructure>
@@ -65,7 +103,7 @@ function ProductID() {
         <div className="product-id__container">
           <div className="grid">
             <Link className="link" href="/">
-              Home
+              Home. De user con cartId: {cart?.id}
             </Link>
             /<span>{productById.name}</span>
           </div>
@@ -87,7 +125,7 @@ function ProductID() {
               <div className="divisorio"></div>
               <p className="product-price"> $ {productById.basePrice} </p>
               <p className="withou-quotas">
-                3 cuotas sin interés de ${" "}
+                3 cuotas sin interés de $
                 {Math.round(Number(productById.basePrice) / 3)}
               </p>
               <p className="description">{productById.description}</p>
@@ -149,6 +187,19 @@ function ProductID() {
                 <button
                   className="button-add-cart"
                   disabled={!sizeSelected || stockLimit === 0}
+                  style={{
+                    cursor:
+                      !sizeSelected || stockLimit === 0
+                        ? "not-allowed"
+                        : "pointer",
+                  }}
+                  onClick={() =>
+                    handleAddToCart(
+                      productById?.variants.find(
+                        (variant) => variant.size === sizeSelected
+                      )?.id || ""
+                    )
+                  }
                 >
                   Agregar al carrito
                 </button>
@@ -158,6 +209,9 @@ function ProductID() {
           </div>
         </div>
       </div>
+      {toastMessage && (
+        <Toast message={toastMessage.message} error={toastMessage.error} />
+      )}
     </SectionStructure>
   );
 }

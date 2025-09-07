@@ -1,7 +1,7 @@
 export interface CartByIdInterface {
   id: string;
   userId: string;
-  sessionId: null;
+  sessionId?: string;
   createdAt: Date;
   updatedAt: Date;
   items?: Item[];
@@ -44,4 +44,37 @@ export interface Product {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  images: Images[];
+}
+
+interface Images {
+  id: string;
+  url: string;
+  alt: string;
+  position: number;
+  productId: string;
+  variantId: string;
+  createdAt: Date;
+}
+
+// Response de updateCart
+export interface UpdateItemInterface {
+  quantity: number;
+}
+
+export interface ResponseUpdateItemForItemIDInterface {
+  id: string;
+  cartId: string;
+  variantId: string;
+  quantity: number;
+  unitPriceSnap: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Agregar item al carrito mediante POST
+export interface CreateItemInterface {
+  cartId: string;
+  variantId: string;
+  quantity: number;
 }

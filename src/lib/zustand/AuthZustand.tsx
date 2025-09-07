@@ -3,6 +3,7 @@ import { JwtPayload } from "@/Insfraestructure/Interfaces/auth/auth.interface";
 import { jwtDecode } from "jwt-decode";
 
 const KEY_JWT = process.env.NEXT_PUBLIC_KEY_JWT as string;
+const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString();
 
 const isValidJWT = (token: string): boolean => {
   if (!token || typeof token !== "string") return false;
@@ -35,8 +36,7 @@ const useAuthStore = create<AuthStore>((set) => ({
 
   setJwt: (jwt: string) => {
     if (typeof window !== "undefined") {
-      // localStorage.setItem(KEY_JWT, jwt);
-      document.cookie = `${KEY_JWT}=${jwt}; path=/; Secure; SameSite=Strict;`;
+      document.cookie = `${KEY_JWT}=${jwt}; Expires=${expires}; path=/; Secure; SameSite=Strict;`;
     }
 
     const decodedJwt = decodeJwt(jwt);
@@ -48,7 +48,6 @@ const useAuthStore = create<AuthStore>((set) => ({
 
   initializeFromStorage: () => {
     if (typeof window !== "undefined") {
-      // const savedJwt = localStorage.getItem(KEY_JWT) || "";
       const savedJwt =
         document.cookie
           .split(";")
@@ -66,7 +65,6 @@ const useAuthStore = create<AuthStore>((set) => ({
 
   logout: () => {
     if (typeof window !== "undefined") {
-      // localStorage.removeItem(KEY_JWT);
       document.cookie = `${KEY_JWT}=; Max-Age=0; path=/; Secure; SameSite=Strict;`;
     }
     set(() => ({ jwt: "", userDataSession: null }));

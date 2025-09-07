@@ -2,10 +2,14 @@ import React from "react";
 
 import "./ProductById.scss";
 
-function ProductByIdLoading() {
+interface Props {
+  detail: string;
+}
+
+function ProductByIdLoading({ detail }: Props) {
   return (
     <div className="product-by-id-loading">
-      <p>Cargando producto...</p>
+      <p>Cargando {detail}...</p>
     </div>
   );
 }
