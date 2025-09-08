@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Chroma",
-  description: "Ecommerce platform",
+  description: "Chroma - Indumentaria masculina",
   keywords: ["ecommerce", "shop", "store"],
   authors: [{ name: "Lucas Cabral" }],
 };

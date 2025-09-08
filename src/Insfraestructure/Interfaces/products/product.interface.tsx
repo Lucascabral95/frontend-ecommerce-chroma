@@ -1,6 +1,12 @@
 import { ProductStatus, Size } from "../enums/enums-global.interface";
+import {
+  FilterProductSortFieldEnum,
+  SortOrderEnum,
+} from "../filters/filters.interface";
 
 export interface ProductFilter {
+  sortOrder?: SortOrderEnum;
+  sortBy?: FilterProductSortFieldEnum;
   page?: number;
   limit?: number;
   name?: string;

@@ -2,23 +2,28 @@
 
 import SectionStructure from "@/production/Section/SectionStructure";
 import { useParams, useSearchParams } from "next/navigation";
-
 import Link from "next/link";
 import BodyFilterProducts from "@/production/FilterProducts/BodyFilterProducts/BodyFilterProducts";
-
 import { ProductFilter } from "@/Insfraestructure/Interfaces/products/product.interface";
+
+import { useMemo, useState } from "react";
+import BodyProductsCategories from "@/Shared/BodyProducts/BodyProductsCategories";
+import { BodyProductsCategoriesInterface } from "@/Insfraestructure/Interfaces/bodyproducts/bodyproducts.interface";
 
 import "./ProductByCategory.scss";
 
-const TITLE: string = "CAMPERAS DESDE $49.900";
-const DESCRIPTION: string =
-  "Lorem ipsum dolor sit amet consectetur adipisicing elit.";
-
 function ProductByCategory() {
+  const [allCategories] = useState<BodyProductsCategoriesInterface[]>(
+    BodyProductsCategories
+  );
   const { category } = useParams() as { category: string };
 
   const searchParams = useSearchParams();
   const paramsProduct: ProductFilter = Object.fromEntries(searchParams);
+
+  const categorySearched = useMemo(() => {
+    return allCategories.find((cat) => cat.id === category);
+  }, [allCategories, category]);
 
   return (
     <SectionStructure>
@@ -34,17 +39,11 @@ function ProductByCategory() {
             </Link>
           </div>
           <div className="title-category">
-            <h2 className="title-category-text"> {TITLE} </h2>
+            <h2 className="title-category-text"> {categorySearched?.title} </h2>
           </div>
           <div className="description-category">
             <h2 className="description-category-text">
-              {DESCRIPTION} Possimus vitae totam repudiandae! Temporibus, eum!
-              Magnam eveniet sint odio commodi eligendi doloribus
-              exercitationem, facilis dolores aspernatur consequatur? Assumenda
-              nisi quam et. Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Possimus vitae totam repudiandae! Temporibus, eum! Magnam
-              eveniet sint odio commodi eligendi doloribus exercitationem,
-              facilis dolores aspernatur consequatur? Assumenda nisi quam et.
+              {categorySearched?.description}
             </h2>
           </div>
           <BodyFilterProducts id={category} params={paramsProduct} />

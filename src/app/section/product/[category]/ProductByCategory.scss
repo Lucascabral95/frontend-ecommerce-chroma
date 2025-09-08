@@ -1,3 +1,6 @@
+$bp-lg: 1024px;
+$bp-md: 768px;
+
 .product-by-category {
   width: 100%;
 
@@ -24,8 +27,8 @@
     }
 
     .title-category {
-      margin: 0 20px;
       margin: 0 0 40px;
+
       .title-category-text {
         color: black;
         font-size: 26px;
@@ -36,11 +39,34 @@
 
     .description-category {
       padding: 0 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .description-category-text {
+        max-width: 1000px;
         color: black;
         text-align: center;
         font-size: 14px;
+
+        @media (min-width: $bp-md) and (max-width: $bp-lg) {
+          width: 100%;
+        }
+      }
+    }
+
+    @media (max-width: $bp-lg) {
+      .sections-index {
+        display: none;
+      }
+
+      .title-category {
+        margin: 0 0 20px;
+      }
+
+      .description-category {
+        padding: 0 10px;
       }
     }
   }

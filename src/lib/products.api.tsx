@@ -10,6 +10,8 @@ export async function getProducts(filter: ProductFilter) {
       params: filter,
     });
 
+    console.log(`params: ${filter}`);
+
     return data;
   } catch (error) {
     console.log(error);
