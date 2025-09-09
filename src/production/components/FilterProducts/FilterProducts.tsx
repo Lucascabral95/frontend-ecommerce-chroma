@@ -1,12 +1,11 @@
 "use client";
-import { useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { IoChevronBack } from "react-icons/io5";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { brands, sizes, categoriesArray } from "@/lib/filters-products";
 import ArrayCategory from "./ArrayCategory";
-
 import "./FilterProducts.scss";
 
 interface Props {
@@ -18,50 +17,72 @@ function FilterProducts({ setOpenFilters }: Props) {
   const linksSizesMemo = useMemo(() => sizes, []);
   const brandsMemo = useMemo(() => brands, []);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [priceCount, setPriceCount] = useState<{
     min?: number;
     max?: number;
     brandId?: string;
-    sizes?: string[];
-    categories?: string[];
+    sizes?: string;
+    categories?: string;
   } | null>(null);
 
   const redirectProductFilters = () => {
     if (!priceCount) return;
 
-    const hasMin = Boolean(priceCount.min);
-    const hasMax = Boolean(priceCount.max);
-    const brandId = priceCount.brandId;
-    const sizes = priceCount.sizes;
-    const categories = priceCount.categories;
+    const params = new URLSearchParams(searchParams);
+    params.delete("page");
 
-    switch (true) {
-      case hasMin && hasMax:
-        router.push(
-          `/section/product?minPrice=${priceCount.min}&maxPrice=${priceCount.max}`
-        );
-        break;
-      case hasMin:
-        router.push(`/section/product?minPrice=${priceCount.min}`);
-        break;
-      case hasMax:
-        router.push(`/section/product?maxPrice=${priceCount.max}`);
-        break;
-      case brandId !== undefined:
-        router.push(`/section/product?brandId=${brandId}`);
-        break;
-      case sizes !== undefined:
-        router.push(`/section/product?size=${sizes}`);
-        break;
-      case categories !== undefined:
-        router.push(`/section/product?categoryId=${categories}`);
-        break;
-      default:
-        break;
+    if (priceCount.min) {
+      params.set("minPrice", priceCount.min.toString());
+    }
+    if (priceCount.max) {
+      params.set("maxPrice", priceCount.max.toString());
+    }
+    if (priceCount.brandId) {
+      params.set("brandId", priceCount.brandId);
+    }
+    if (priceCount.sizes) {
+      params.set("size", priceCount.sizes);
+    }
+    if (priceCount.categories) {
+      params.set("categoryId", priceCount.categories);
     }
 
+    // const currentPath = window.location.pathname;
+    router.push(`/section/product?${params.toString()}`);
     setOpenFilters(false);
+  };
+
+  const handleCategoryChange = (categoryId: string, checked: boolean) => {
+    setPriceCount((prev) => {
+      const currentCategories = prev?.categories ?? "";
+      let newCategories: string;
+
+      if (checked) {
+        newCategories = [...currentCategories, categoryId].join(",");
+      } else {
+        newCategories = currentCategories.replace(`,${categoryId}`, "");
+      }
+
+      return {
+        ...prev,
+        categories: newCategories.length > 0 ? newCategories : undefined,
+      };
+    });
+  };
+
+  const handleSizeChange = (sizeName: string) => {
+    setPriceCount((prev) => ({
+      ...prev,
+      sizes: sizeName,
+    }));
+  };
+
+  const styleSelected: CSSProperties = {
+    textDecoration: "underline",
+    textDecorationThickness: "2px",
+    textUnderlineOffset: "2px",
   };
 
   return (
@@ -93,71 +114,62 @@ function FilterProducts({ setOpenFilters }: Props) {
           <div className="categories">
             <ArrayCategory idem="Categorías">
               {linksCategoriesMemo.map((category, index) => (
-                <div className="value" key={index}>
-                  <input
-                    name="category"
-                    className="checkbox-category"
-                    type="checkbox"
-                    id={category.id}
-                    value={category.id}
-                    onChange={() =>
-                      setPriceCount({
-                        ...priceCount,
-                        categories: [
-                          ...(priceCount?.categories ?? []),
-                          category.id,
-                        ],
-                      })
+                <div
+                  className="value"
+                  key={index}
+                  onClick={() => handleCategoryChange(category.id, true)}
+                >
+                  <label
+                    className="label"
+                    htmlFor={category.id}
+                    style={
+                      priceCount?.categories?.includes(category.id)
+                        ? styleSelected
+                        : {}
                     }
-                  />
-                  <label className="label" htmlFor={category.id}>
+                  >
                     {category.name}
                   </label>
                 </div>
               ))}
             </ArrayCategory>
-
             <ArrayCategory idem="Tallas">
               {linksSizesMemo.map((size, index) => (
-                <div className="value" key={index}>
-                  <input
-                    name="size"
-                    className="checkbox-category"
-                    type="checkbox"
-                    id={size.name}
-                    value={size.name}
-                    onChange={() =>
-                      setPriceCount({
-                        ...priceCount,
-                        sizes: [...(priceCount?.sizes ?? []), size.name],
-                      })
-                    }
-                  />
-                  <label className="label" htmlFor={size.name}>
+                <div
+                  className="value"
+                  key={index}
+                  onClick={() => handleSizeChange(size.name)}
+                >
+                  <label
+                    className="label"
+                    htmlFor={size.name}
+                    style={priceCount?.sizes === size.name ? styleSelected : {}}
+                  >
                     {size.name}
                   </label>
                 </div>
               ))}
             </ArrayCategory>
+
             <ArrayCategory idem="Marcas">
               {brandsMemo.map((brand, index) => (
                 <div className="value" key={index}>
-                  <input
-                    name="brand"
-                    className="checkbox-category"
-                    type="checkbox"
-                    id={brand.id}
-                    value={brand.id}
-                    onChange={() =>
+                  <label
+                    onClick={() =>
                       setPriceCount({ ...priceCount, brandId: brand.id })
                     }
-                  />
-                  <label className="label" htmlFor={brand.id}>
+                    className="label"
+                    htmlFor={brand.id}
+                    style={
+                      priceCount?.brandId === brand.id ? styleSelected : {}
+                    }
+                  >
                     {brand.name}
                   </label>
                 </div>
               ))}
             </ArrayCategory>
+
             <ArrayCategory idem="Precios">
               <div className="prices">
                 <div className="price-min-max">
@@ -168,7 +180,9 @@ function FilterProducts({ setOpenFilters }: Props) {
                     onChange={(e) =>
                       setPriceCount({
                         ...priceCount,
-                        min: parseInt(e.target.value),
+                        min: e.target.value
+                          ? parseInt(e.target.value)
+                          : undefined,
                       })
                     }
                   />
@@ -182,7 +196,9 @@ function FilterProducts({ setOpenFilters }: Props) {
                     onChange={(e) =>
                       setPriceCount({
                         ...priceCount,
-                        max: parseInt(e.target.value),
+                        max: e.target.value
+                          ? parseInt(e.target.value)
+                          : undefined,
                       })
                     }
                   />
@@ -192,7 +208,7 @@ function FilterProducts({ setOpenFilters }: Props) {
           </div>
         </div>
         <div className="apply-mobile" onClick={() => redirectProductFilters()}>
-          <button> Aplicar</button>
+          <button> Aplicar </button>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import {
   SortOrderEnum,
 } from "@/Insfraestructure/Interfaces/filters/filters.interface";
 import FilterProducts from "@/production/components/FilterProducts/FilterProducts";
+import ProductByIdError from "@/production/ProductById/ProductByIdError";
 
 interface Props {
   id: string;
@@ -33,6 +34,17 @@ function BodyFilterProducts({ id, params }: Props) {
       sortBy: orderSelected,
       sortOrder: orderDirection,
     };
+
+    if (params?.size && typeof params.size === "string") {
+      baseFilter.size;
+    }
+    if (
+      params?.categoryId &&
+      typeof params.categoryId === "string" &&
+      params.categoryId.includes(",")
+    ) {
+      baseFilter.categoryId;
+    }
 
     if (id && id !== "all") {
       return { ...baseFilter, categoryId: id };
@@ -112,7 +124,18 @@ function BodyFilterProducts({ id, params }: Props) {
           </div>
         </div>
 
-        <AllCardMap allProducts={products.data ?? undefined} categoryId={id} />
+        {products.data?.total === 0 ? (
+          <ProductByIdError
+            title="No hay productos"
+            description="Lo sentimos, no hay productos disponibles para esta búsqueda."
+          />
+        ) : (
+          <AllCardMap
+            allProducts={products.data ?? undefined}
+            categoryId={id}
+          />
+        )}
+
         {openFilters && <FilterProducts setOpenFilters={setOpenFilters} />}
       </div>
     </div>
