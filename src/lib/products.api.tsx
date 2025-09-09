@@ -3,6 +3,7 @@ import {
   Product,
   ProductFilter,
 } from "@/Insfraestructure/Interfaces/products/product.interface";
+import { isAxiosError } from "axios";
 
 export async function getProducts(filter: ProductFilter) {
   try {
@@ -10,11 +11,16 @@ export async function getProducts(filter: ProductFilter) {
       params: filter,
     });
 
-    console.log(`params: ${filter}`);
-
     return data;
   } catch (error) {
-    console.log(error);
+    if (isAxiosError(error)) {
+      const status = error.response?.status ?? null;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al obtener los productos";
+      throw { status, message };
+    }
   }
 }
 
@@ -24,6 +30,13 @@ export async function getProductById(id: string) {
 
     return data;
   } catch (error) {
-    console.log(error);
+    if (isAxiosError(error)) {
+      const status = error.response?.status ?? null;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al obtener el producto";
+      throw { status, message };
+    }
   }
 }

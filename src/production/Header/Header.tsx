@@ -1,21 +1,18 @@
 "use client";
-import React, { useState } from "react";
-
+import { useState } from "react";
 import Link from "next/link";
-
-import SectionStructure from "../Section/SectionStructure";
+import { useRouter, usePathname } from "next/navigation";
+import { IoMdClose } from "react-icons/io";
 import { CiMenuBurger, CiShoppingCart, CiUser } from "react-icons/ci";
 import { HiMagnifyingGlass } from "react-icons/hi2";
-import { IoMdClose } from "react-icons/io";
 
+import SectionStructure from "../Section/SectionStructure";
 import MenuBurguer from "./components/MenuBurguer";
 import Search from "./components/Search";
 import Modal from "../Cart/Modal/Modal";
-import { useRouter, usePathname } from "next/navigation";
-
-import "./Header.scss";
 import useAuthStore from "@/lib/zustand/AuthZustand";
 import { useCartStore } from "@/lib/zustand/CartZustand";
+import "./Header.scss";
 
 function Header() {
   const [menuClose, setMenuClose] = useState(false);
@@ -82,7 +79,7 @@ function Header() {
         </header>
       </SectionStructure>
       {menuClose && <MenuBurguer close={() => setMenuClose(false)} />}
-      {searchClose && <Search />}
+      {searchClose && <Search close={() => setSearchClose(false)} />}
       {cartClose && <Modal close={() => setCartClose(false)} />}
     </div>
   );
