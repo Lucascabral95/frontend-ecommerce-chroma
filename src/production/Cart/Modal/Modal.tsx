@@ -1,14 +1,19 @@
-import React from "react";
-
-import "./Modal.scss";
+"use client";
+import { useMemo } from "react";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
+
+import { useCartStore } from "@/lib/zustand/CartZustand";
+import EstructureCartMobile from "../EstructureCart/EstructureCartMobile";
+import "./Modal.scss";
 
 interface Props {
   close?: () => void;
-  // products?: any[]
 }
 
 function Modal({ close }: Props) {
+  const { cart } = useCartStore();
+  const productsCart = useMemo(() => cart, [cart]);
+
   return (
     <div className="modal-cart" onClick={() => close?.()}>
       <div
@@ -21,9 +26,7 @@ function Modal({ close }: Props) {
           <IoMdClose className="icon" onClick={() => close?.()} />
         </div>
         <div className="body-cart">
-          <div className="cart-empty">
-            <p> No hay productos en el carrito </p>
-          </div>
+          <EstructureCartMobile cartById={productsCart} />
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ export async function getCartByUserId(userId: string) {
     const { data } = await axiosInstance.get<CartByIdInterface>(
       `/cart/user/${userId}`
     );
+    console.log(data);
 
     return data;
   } catch (error) {

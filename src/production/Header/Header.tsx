@@ -70,10 +70,11 @@ function Header() {
             </Link>
             <div className="icono" onClick={() => handleCart()}>
               <CiShoppingCart className="icon" />
-              {cart?.items?.length ||
-                (0 > 0 && (
-                  <span className="cart-count">{cart?.items?.length || 0}</span>
-                ))}
+              {cart?.items?.length !== 0 && (
+                <div className="div-cart-count">
+                  <span>{cart?.items?.length || 0}</span>
+                </div>
+              )}
             </div>
           </div>
         </header>

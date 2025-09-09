@@ -1,50 +1,65 @@
 "use client";
+import { useEffect, useState, useCallback } from "react";
 
 import EstructureCartCheckoutProfile from "@/production/components/EstructureCartCheckoutProfile/EstructureCartCheckoutProfile";
-
-import "./CartPage.scss";
-
-import useCart from "@/production/Hooks/useCart";
 import useAuthStore from "@/lib/zustand/AuthZustand";
 import EstructureCart from "@/production/Cart/EstructureCart/EstructureCart";
 import ProductByIdError from "@/production/ProductById/ProductByIdError";
 import ProductByIdLoading from "@/production/ProductById/ProductByIdLoading";
-import { useEffect, useState } from "react";
-import { CartByIdInterface } from "@/Insfraestructure/Interfaces/Carts/Carts.interface";
+import { getCartByUserId } from "@/lib/CartsApi";
+import { useCartStore } from "@/lib/zustand/CartZustand";
+import "./CartPage.scss";
+
+type LoadingState = "idle" | "loading" | "success" | "error" | "empty";
 
 function CartPage() {
+  const { cart } = useCartStore();
   const { userDataSession } = useAuthStore();
-  const {
-    cartById: { data: cartById, isLoading, isError },
-  } = useCart(userDataSession?.id);
-  const [cartTotal, setCartTotal] = useState<number>(0);
-  const [cartItems, setCartItems] = useState<CartByIdInterface | undefined>(
-    undefined
+  const [loadingState, setLoadingState] = useState<LoadingState>("idle");
+
+  const fetchCartData = useCallback(
+    async (userId: string, signal: AbortSignal) => {
+      try {
+        setLoadingState("loading");
+        const cartData = await getCartByUserId(userId);
+
+        if (signal.aborted) return;
+
+        if (!cartData || !cartData.items?.length) {
+          setLoadingState("empty");
+        } else {
+          setLoadingState("success");
+        }
+      } catch (error) {
+        if (!signal.aborted) {
+          console.error("Error fetching cart:", error);
+          setLoadingState("error");
+        }
+      }
+    },
+    []
   );
-  const [cartEmpty, setCartEmpty] = useState<boolean>(false);
 
   useEffect(() => {
-    setCartItems(cartById);
-  }, [cartById]);
+    if (!userDataSession?.id) {
+      setLoadingState("empty");
+      return;
+    }
 
-  useEffect(() => {
-    setCartTotal(
-      cartItems?.items?.reduce(
-        (acc, item) => acc + (item.quantity || 0) * (item.variant.price || 0),
-        0
-      ) || 0
-    );
-  }, [cartItems?.items]);
+    const abortController = new AbortController();
 
-  useEffect(() => {
-    setCartEmpty(!cartItems?.items?.length);
-  }, [cartItems?.items]);
+    fetchCartData(userDataSession.id, abortController.signal);
 
-  if (isLoading) {
+    return () => {
+      abortController.abort();
+    };
+  }, [userDataSession?.id, fetchCartData]);
+
+  if (loadingState === "loading") {
     return <ProductByIdLoading detail="carrito" />;
   }
 
-  if (isError) {
+  if (loadingState === "error") {
     return (
       <ProductByIdError
         title="Error al cargar el carrito"
@@ -53,7 +68,7 @@ function CartPage() {
     );
   }
 
-  if (cartEmpty) {
+  if (loadingState === "empty" || !cart?.items?.length) {
     return (
       <ProductByIdError
         title="Carrito vacío"
@@ -69,12 +84,7 @@ function CartPage() {
     >
       <div className="cart-section">
         <div className="cart-section__container">
-          <EstructureCart
-            cartById={cartById}
-            cartTotal={cartTotal}
-            cartItems={cartItems}
-            setCartItems={setCartItems}
-          />
+          <EstructureCart cartById={cart} />
         </div>
       </div>
     </EstructureCartCheckoutProfile>

@@ -1,9 +1,8 @@
-import React from "react";
-
+import { useMemo } from "react";
 import Link from "next/link";
+
 import MenuBurguerMobile from "./MenuBurguerMobile";
 import categories from "@/lib/Categories";
-
 import "./MenuBurguer.scss";
 
 interface Props {
@@ -11,7 +10,7 @@ interface Props {
 }
 
 function MenuBurguer({ close }: Props) {
-  const sections = categories;
+  const sections = useMemo(() => categories, []);
 
   return (
     <>

@@ -68,6 +68,11 @@ const useAuthStore = create<AuthStore>((set) => ({
       document.cookie = `${KEY_JWT}=; Max-Age=0; path=/; Secure; SameSite=Strict;`;
     }
     set(() => ({ jwt: "", userDataSession: null }));
+
+    import("@/lib/zustand/CartZustand").then(({ useCartStore }) => {
+      const { resetCart } = useCartStore.getState();
+      resetCart();
+    });
   },
 
   userDataSession: null,

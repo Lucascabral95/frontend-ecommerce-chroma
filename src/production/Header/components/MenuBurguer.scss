@@ -145,6 +145,16 @@ $padding-section-footer: 15px 20px;
         .li-section-footer {
           padding: $padding-section-footer;
           font-size: 14px;
+
+          .a-link-my-github {
+            margin: 0 0 0 6px;
+            color: #ff5722;
+
+            &:hover {
+              text-decoration: underline;
+              transition: 0.3s ease;
+            }
+          }
         }
       }
     }

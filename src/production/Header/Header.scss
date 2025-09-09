@@ -49,6 +49,20 @@ $bp-md: 768px;
         color: black;
         font-size: 30px;
       }
+
+      .div-cart-count {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        transform: translateX(-2px);
+      }
     }
   }
 }
