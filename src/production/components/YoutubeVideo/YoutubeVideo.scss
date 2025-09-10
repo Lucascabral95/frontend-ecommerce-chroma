@@ -1,0 +1,19 @@
+.youtube-video {
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+
+  .video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    display: block;
+    border: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .youtube-video {
+    padding: 10px;
+  }
+}

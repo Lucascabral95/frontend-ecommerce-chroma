@@ -1,8 +1,7 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import Slider from "react-slick";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -35,13 +34,11 @@ const settings = {
 };
 
 const imagesDesktop: string[] = [
-  "/devre-promo-1.webp",
-  "/devre-promo-2.webp",
-  "/devre-promo-3.webp",
-  "/devre-promo-4.webp",
+  "/img/port-horizont-uno.webp",
+  "/img/port-horizont-dos.webp",
 ];
 
-const imagesMobile: string[] = ["/img/oferta-mobile-2.webp"];
+const imagesMobile: string[] = ["/img/port-horizont-uno-mobile.webp"];
 
 const ImageCarousel = () => {
   const width = useWindowWidth();

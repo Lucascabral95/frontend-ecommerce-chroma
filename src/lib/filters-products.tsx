@@ -41,6 +41,10 @@ export const categoriesArray: ArrayInterface[] = [
     id: "6f7a8b9c-uygw7u83-4234-2222-6789abcdes83",
     name: "Chombas",
   },
+  {
+    id: "3c4d5e6f-7a8b-4901-c234-3456789abcde",
+    name: "Remeras Manga Larga",
+  },
 ];
 
 export const sizes: ArrayInterface[] = [

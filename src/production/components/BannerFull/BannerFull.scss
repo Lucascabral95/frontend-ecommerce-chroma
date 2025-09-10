@@ -1,0 +1,34 @@
+$margin-banner-full: 40px 0;
+$bp-md: 768px;
+
+.banner-full {
+  width: 100%;
+  margin: $margin-banner-full;
+
+  .banner-full__container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .images-banner-full {
+      width: 33%;
+
+      .image-banner-full {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  @media (max-width: $bp-md) {
+    .banner-full__container {
+      flex-direction: column;
+
+      .images-banner-full {
+        width: 100%;
+        margin: 0 0 10px 0;
+      }
+    }
+  }
+}

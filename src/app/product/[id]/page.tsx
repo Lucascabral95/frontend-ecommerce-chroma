@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import SectionStructure from "@/production/Section/SectionStructure";
 import Link from "next/link";
 import Image from "next/image";
 import { FaPlus, FaMinus } from "react-icons/fa";
+
+import SectionStructure from "@/production/Section/SectionStructure";
 import MethodsPayments from "@/production/components/Collapse/MethodsPayments";
 import useProducts from "@/production/Hooks/useProducts";
 import { Size } from "@/Insfraestructure/Interfaces/enums/enums-global.interface";
@@ -12,7 +13,6 @@ import ProductByIdLoading from "@/production/ProductById/ProductByIdLoading";
 import ProductByIdError from "@/production/ProductById/ProductByIdError";
 import { useCartStore } from "@/lib/zustand/CartZustand";
 import Toast from "@/Shared/Components/Toast";
-
 import "./ProductId.scss";
 
 const TOAST_TIME = 1800;
@@ -34,22 +34,18 @@ function ProductID() {
   const { cart, addToCart } = useCartStore();
 
   const aumentarCantidad = () => {
-    if (quantity < stockLimit) {
-      setQuantity(quantity + 1);
-    }
+    setQuantity((prev) => (prev < stockLimit ? prev + 1 : prev));
   };
 
   const disminuirCantidad = () => {
-    if (quantity > 1 && quantity <= stockLimit) {
-      setQuantity(quantity - 1);
-    }
+    setQuantity((prev) => (prev > 1 && prev <= stockLimit ? prev - 1 : prev));
   };
 
   const selectSize = (size: Size) => {
     setQuantity(1);
     setSizeSelected(size);
     setStockLimit(
-      productById?.variants.find((variant) => variant.size === size)?.stock || 0
+      productById?.variants.find((variant) => variant.size === size)?.stock ?? 0
     );
   };
 
@@ -66,33 +62,29 @@ function ProductID() {
     );
   }
 
+  const showToast = (message: string, error: boolean) => {
+    setToastMessage({ message, error });
+    setTimeout(
+      () => setToastMessage({ message: "", error: false }),
+      TOAST_TIME
+    );
+  };
+
   const handleAddToCart = (variantId: string) => {
     if (sizeSelected && cart?.id) {
       addToCart(cart.id, variantId, cart.userId, {
-        quantity: 1,
+        quantity: quantity,
         cartId: cart.id,
         variantId: variantId,
       });
-      setToastMessage({
-        message: "Producto agregado al carrito",
-        error: false,
-      });
-      setTimeout(
-        () => setToastMessage({ message: "", error: false }),
-        TOAST_TIME
-      );
+      showToast("Producto agregado al carrito", false);
     } else {
       console.error(
         "No se puede agregar al carrito: tamaño no seleccionado o carrito no disponible"
       );
-      setToastMessage({
-        message:
-          "No se puede agregar al carrito: tamaño no seleccionado o carrito no disponible",
-        error: true,
-      });
-      setTimeout(
-        () => setToastMessage({ message: "", error: false }),
-        TOAST_TIME
+      showToast(
+        "No se puede agregar al carrito: tamaño no seleccionado o carrito no disponible",
+        true
       );
     }
   };
@@ -103,14 +95,14 @@ function ProductID() {
         <div className="product-id__container">
           <div className="grid">
             <Link className="link" href="/">
-              Home. De user con cartId: {cart?.id}
+              Home
             </Link>
             /<span>{productById.name}</span>
           </div>
           <div className="product-id__content">
             <div className="product-images">
               <Image
-                src={productById.images[0].url}
+                src={productById.images[0]?.url ?? ""}
                 alt={productById.name}
                 className="product-image-image"
                 width={500}
@@ -125,7 +117,7 @@ function ProductID() {
               <div className="divisorio"></div>
               <p className="product-price"> $ {productById.basePrice} </p>
               <p className="withou-quotas">
-                3 cuotas sin interés de $
+                3 cuotas sin interés de ${" "}
                 {Math.round(Number(productById.basePrice) / 3)}
               </p>
               <p className="description">{productById.description}</p>
@@ -197,7 +189,7 @@ function ProductID() {
                     handleAddToCart(
                       productById?.variants.find(
                         (variant) => variant.size === sizeSelected
-                      )?.id || ""
+                      )?.id ?? ""
                     )
                   }
                 >
