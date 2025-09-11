@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
 
 import SectionStructure from "@/production/Section/SectionStructure";
-
 import Toast from "@/Shared/Components/Toast";
-
 import "./EstructureCartCheckoutProfile.scss";
 
 interface Props {
@@ -28,7 +26,9 @@ function EstructureCartCheckoutProfile({
               <h2 className="title-text"> {title} </h2>
             </div>
             {children}
-            {toast && <Toast message={toast.message} error={toast.error} />}
+            {toast?.message && (
+              <Toast message={toast.message} error={toast.error} />
+            )}
           </div>
         </div>
       </div>

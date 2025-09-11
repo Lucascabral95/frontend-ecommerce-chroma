@@ -1,6 +1,7 @@
 $margin-text: 0 0 20px 0;
 $margin-login: 30px 0 8vw 0;
 $padding-bp-sm-cont: 0;
+$margin-second-title: 20px 0px 0px 0px;
 
 $bp-sm: 576px;
 $bp-md: 768px;
@@ -53,6 +54,18 @@ $bp-lg: 1024px;
         }
       }
 
+      .second-title {
+        display: flex;
+        align-items: center;
+        margin: $margin-second-title;
+
+        h4 {
+          color: black;
+          font-size: 20px;
+          margin: $margin-text;
+        }
+      }
+
       .form {
         display: flex;
         flex-direction: column;
@@ -90,6 +103,18 @@ $bp-lg: 1024px;
 
               &::placeholder {
                 color: #999999;
+              }
+            }
+
+            .div-errors {
+              display: flex;
+              flex-direction: column;
+
+              .span-error {
+                color: red;
+                font-size: 12px;
+                margin: 2px 0 0 4px;
+                white-space: nowrap;
               }
             }
 

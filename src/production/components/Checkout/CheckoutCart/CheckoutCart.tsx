@@ -1,32 +1,22 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { CgMathPlus, CgMathMinus, CgTrash } from "react-icons/cg";
 
 import { CartByIdInterface } from "@/Insfraestructure/Interfaces/Carts/Carts.interface";
 import Table from "@/production/Table/Table";
-import "./CartCard.scss";
+import "@/production/Cart/EstructureCart/CartCard/CartCard.scss";
 
 interface Props {
-  cartItems: CartByIdInterface | undefined;
-  aumentQuantity: (id: string) => void;
-  decrementQuantity: (id: string) => void;
-  handleRemoveItem: (id: string) => void;
-  checkout: () => void;
+  cart: CartByIdInterface | undefined;
+  width?: string;
 }
 
-function CartCard({
-  cartItems,
-  aumentQuantity,
-  decrementQuantity,
-  handleRemoveItem,
-}: Props) {
+function CheckoutCart({ cart, width }: Props) {
   return (
-    <div className="cart-cart">
-      <div className="cart-cart__container">
+    <div className="cart-cart" style={{ width: width ?? "100%" }}>
+      <div className="cart-cart__container" style={{ width: width ?? "100%" }}>
         <Table
           headers={["Producto", "Precio", "Cantidad", "Subtotal"]}
-          data={cartItems?.items || []}
+          data={cart?.items || []}
           renderRow={(item) => (
             <>
               <td className="td-product-image-title-size table-of-desktop">
@@ -54,33 +44,22 @@ function CartCard({
               <td className="table-of-desktop">{item?.variant?.price}</td>
 
               <td className="td-quantity table-of-desktop">
-                <div className="quantity-button">
-                  <div
-                    className="icono"
-                    onClick={() => decrementQuantity(item?.id)}
-                  >
-                    <CgMathMinus className="icon" />
-                  </div>
+                <div
+                  className="quantity-button"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <p>{item?.quantity}</p>
-                  <div
-                    className="icono"
-                    onClick={() => aumentQuantity(item?.id)}
-                  >
-                    <CgMathPlus className="icon" />
-                  </div>
                 </div>
               </td>
               <td className="table-of-desktop">
                 {item?.variant?.price * item?.quantity}
               </td>
 
-              <td
-                className="trash table-of-desktop"
-                onClick={() => handleRemoveItem(item?.id)}
-              >
-                <CgTrash className="icon" />
-              </td>
-
+              {/* Mobile  */}
               <tr className="table-mobile">
                 <div className="imagen">
                   <Link href={`/product/${item?.variant?.product?.id}`}>
@@ -109,30 +88,12 @@ function CartCard({
                     </div>
                     <div className="td-of-quantity">
                       <div className="quantity-button">
-                        <div
-                          className="icono"
-                          onClick={() => decrementQuantity(item?.id)}
-                        >
-                          <CgMathMinus className="icon" />
-                        </div>
                         <p>{item?.quantity}</p>
-                        <div
-                          className="icono"
-                          onClick={() => aumentQuantity(item?.id)}
-                        >
-                          <CgMathPlus className="icon" />
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="container-third">
-                  <div className="icono">
-                    <CgTrash
-                      className="icon"
-                      onClick={() => handleRemoveItem(item?.id)}
-                    />
-                  </div>
                   <div className="text">
                     <p> ${item?.variant?.price * item?.quantity} </p>
                   </div>
@@ -146,4 +107,4 @@ function CartCard({
   );
 }
 
-export default CartCard;
+export default CheckoutCart;

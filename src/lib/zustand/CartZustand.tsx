@@ -1,3 +1,4 @@
+"use client";
 import { create } from "zustand";
 
 import {
@@ -209,9 +210,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
   },
 
   checkout: () => {
-    const { cart } = get();
-    console.log(`Checkout: ${JSON.stringify(cart)}`);
-    get().showToast("Iniciando proceso de compra...");
+    window.location.href = "/checkout";
   },
 
   showToast: (message: string, error: boolean = false) => {
