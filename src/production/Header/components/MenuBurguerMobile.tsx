@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback } from "react";
+import { MouseEvent, ReactNode, useCallback } from "react";
 import Link from "next/link";
 import { CiLogin, CiUser } from "react-icons/ci";
 
@@ -46,7 +46,7 @@ function MenuBurguerMobile({ close }: Props) {
     close();
   }, [close]);
 
-  const handleContainerClick = useCallback((e: React.MouseEvent) => {
+  const handleContainerClick = useCallback((e: MouseEvent) => {
     e.stopPropagation();
   }, []);
 

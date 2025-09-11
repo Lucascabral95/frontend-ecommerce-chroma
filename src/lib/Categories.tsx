@@ -36,6 +36,11 @@ const categories: CategoriesInterface[] = [
     name: "Sacos",
     url: "/section/product/6fddfssdf-0d1e-4234-f567-6789abcdef01",
   },
+  {
+    id: "3c4d5e6f-7a8b-4901-c234-3456789abcde",
+    name: "Remeras Manga Larga",
+    url: "/section/product/3c4d5e6f-7a8b-4901-c234-3456789abcde",
+  },
 ];
 
 export default categories;

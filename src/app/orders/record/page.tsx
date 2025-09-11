@@ -1,10 +1,10 @@
 "use client";
+import { useEffect } from "react";
 
 import useAuthStore from "@/lib/zustand/AuthZustand";
 import { useCartStore } from "@/lib/zustand/CartZustand";
 import EstructureCartCheckoutProfile from "@/production/components/EstructureCartCheckoutProfile/EstructureCartCheckoutProfile";
 import "./OrdersRecord.scss";
-import { useEffect } from "react";
 
 function OrdersRecord() {
   const { userDataSession } = useAuthStore();

@@ -2,8 +2,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import {
+  CiMenuBurger,
+  CiShoppingCart,
+  CiUser,
+  CiViewList,
+} from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
-import { CiMenuBurger, CiShoppingCart, CiUser } from "react-icons/ci";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 
 import SectionStructure from "../Section/SectionStructure";
@@ -15,14 +20,14 @@ import { useCartStore } from "@/lib/zustand/CartZustand";
 import "./Header.scss";
 
 function Header() {
+  const { userDataSession } = useAuthStore();
+  const { cart } = useCartStore();
+
   const [menuClose, setMenuClose] = useState(false);
   const [searchClose, setSearchClose] = useState(false);
   const [cartClose, setCartClose] = useState<boolean>(false);
   const router = useRouter();
   const pathName = usePathname();
-
-  const { userDataSession } = useAuthStore();
-  const { cart } = useCartStore();
 
   const handleCart = () => {
     if (pathName === "/checkout/cart") {
@@ -68,6 +73,11 @@ function Header() {
             >
               <CiUser className="icon" />
             </Link>
+            <div className="icono">
+              <Link href="/orders">
+                <CiViewList className="icon" />
+              </Link>
+            </div>
             <div className="icono" onClick={() => handleCart()}>
               <CiShoppingCart className="icon" />
               {cart?.items?.length !== 0 && (
