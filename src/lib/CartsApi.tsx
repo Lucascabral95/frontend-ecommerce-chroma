@@ -5,14 +5,13 @@ import {
   ResponseUpdateItemForItemIDInterface,
   UpdateItemInterface,
 } from "@/Insfraestructure/Interfaces/Carts/Carts.interface";
+import { isAxiosError } from "axios";
 
 export async function getCartByUserId(userId: string) {
-  // Obtener carrito por id de usuario
   try {
     const { data } = await axiosInstance.get<CartByIdInterface>(
       `/cart/user/${userId}`
     );
-    console.log(data);
 
     return data;
   } catch (error) {
@@ -21,20 +20,25 @@ export async function getCartByUserId(userId: string) {
 }
 
 export async function emptyCart(cartId: string) {
-  // Vaciar todo el carrito
   try {
     const { data } = await axiosInstance.delete<string>(
       `/cart/${cartId}/clear`
     );
-    console.log(data);
 
     return data;
   } catch (error) {
-    console.log(error);
+    if (isAxiosError(error)) {
+      const status = error.response?.status ?? null;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al vaciar el carrito";
+      throw { status, message };
+    }
   }
 }
 
-export async function updateCartItemByItemId( // Actualizar cantidad de un producto
+export async function updateCartItemByItemId(
   itemId: string,
   update: UpdateItemInterface
 ) {
@@ -44,25 +48,36 @@ export async function updateCartItemByItemId( // Actualizar cantidad de un produ
         `/cart/${itemId}/items`,
         update
       );
-    console.log(data);
 
     return data;
   } catch (error) {
-    console.log(error);
+    if (isAxiosError(error)) {
+      const status = error.response?.status ?? null;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al actualizar el carrito";
+      throw { status, message };
+    }
   }
 }
 
 export async function deleteItemById(cartId: string, itemId: string) {
-  // Eliminar un producto del carrito
   try {
     const { data } = await axiosInstance.delete<string>(
       `/cart/${cartId}/items/${itemId}`
     );
-    console.log(data);
 
     return data;
   } catch (error) {
-    console.log(error);
+    if (isAxiosError(error)) {
+      const status = error.response?.status ?? null;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al eliminar el carrito";
+      throw { status, message };
+    }
   }
 }
 
@@ -71,16 +86,21 @@ export async function createItem(
   variantId: string,
   createItem: CreateItemInterface
 ) {
-  // Agregar un producto al carrito, si ya lo tenes, se suma un quantity
   try {
     const { data } = await axiosInstance.post<string>(
       `/cart/add/${cartId}/items/${variantId}`,
       createItem
     );
-    console.log(data);
 
     return data;
   } catch (error) {
-    console.log(error);
+    if (isAxiosError(error)) {
+      const status = error.response?.status ?? null;
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al crear el carrito";
+      throw { status, message };
+    }
   }
 }

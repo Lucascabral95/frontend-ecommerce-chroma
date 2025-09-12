@@ -17,7 +17,6 @@ const decodeJwt = (jwt: string): JwtPayload | null => {
     if (!isValidJWT(jwt)) return null;
     return jwtDecode<JwtPayload>(jwt);
   } catch (error) {
-    console.error("Error decodificando JWT:", error);
     return null;
   }
 };

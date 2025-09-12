@@ -1,4 +1,4 @@
-enum OrderStatus {
+export enum OrderStatus {
   PENDING = "PENDING",
   PAID = "PAID",
   FULFILLED = "FULFILLED",
@@ -9,6 +9,38 @@ enum OrderStatus {
 enum Currency {
   ARS = "ARS",
   USD = "USD",
+}
+
+enum Size {
+  XS = "XS",
+  S = "S",
+  M = "M",
+  L = "L",
+  XL = "XL",
+  XXL = "XXL",
+}
+
+interface Product {
+  id: string;
+  images: {
+    url: string;
+  }[];
+}
+
+interface Item {
+  id: string;
+  orderId: string;
+  variantId: string;
+  quantity: number;
+  unitPrice: number;
+  productName: string;
+  sku: string;
+  size: Size;
+  colorName: string;
+  createdAt: string;
+  variant: {
+    product: Product;
+  };
 }
 
 interface BillingAddress {
@@ -54,9 +86,45 @@ export interface ResponseCreateOrderInterface {
   tax?: number;
   discount?: number;
   total: number;
-  shippingAddress: ShippingAddress[];
-  billingAddress?: BillingAddress[];
+  shippingAddress: ShippingAddress;
+  billingAddress?: BillingAddress;
   mpPreferenceId?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface FilstersOrdersInterface {
+  status?: OrderStatus;
+  limit?: number;
+  page?: number;
+}
+
+// Obtener ordenes de usuarios (por userId)
+export interface GetOrdersByUserIdInterface {
+  id: string;
+  number: number;
+  userId: string;
+  status: OrderStatus;
+  currency: Currency;
+  subtotal: number;
+  shipping?: number;
+  tax?: number;
+  discount?: number;
+  total: number;
+  shippingAddress: ShippingAddress;
+  billingAddress?: BillingAddress;
+  mpPreferenceId?: string;
+  createdAt: string;
+  updatedAt: string;
+  items: Item[];
+}
+
+export interface GetOrdersByUserIdInterfaceArray {
+  total: number;
+  totalPages: number;
+  prevPage: number;
+  nextPage: number;
+  page: number;
+  limit: number;
+  orders: GetOrdersByUserIdInterface[];
 }

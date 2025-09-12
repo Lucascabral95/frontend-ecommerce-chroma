@@ -74,7 +74,7 @@ function Header() {
               <CiUser className="icon" />
             </Link>
             <div className="icono">
-              <Link href="/orders">
+              <Link href="/orders/record">
                 <CiViewList className="icon" />
               </Link>
             </div>
