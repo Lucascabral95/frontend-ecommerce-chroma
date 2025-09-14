@@ -37,6 +37,7 @@ function MenuBurguerMobile({ close }: Props) {
   const handleAuthAction = useCallback(() => {
     if (userDataSession) {
       logout();
+      close();
     } else {
       close();
     }

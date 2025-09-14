@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -13,7 +14,7 @@ import { FilstersOrdersInterface } from "@/Insfraestructure/Interfaces/Orders/Or
 import Orders from "@/production/components/Orders/Orders";
 import "./OrdersRecord.scss";
 
-function OrdersRecord() {
+function OrdersContent() {
   const { userDataSession } = useAuthStore();
   const searchParams = useSearchParams();
 
@@ -34,7 +35,7 @@ function OrdersRecord() {
     status: null,
   });
 
-  const buildFilters = (): FilstersOrdersInterface => {
+  const buildFilters = useCallback((): FilstersOrdersInterface => {
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
     return {
@@ -42,7 +43,7 @@ function OrdersRecord() {
       limit: limit ? Number(limit) : 100,
       status: statusSelected,
     };
-  };
+  }, [searchParams, statusSelected]);
 
   const fetchOrders = useCallback(async () => {
     if (!userDataSession) return;
@@ -58,40 +59,58 @@ function OrdersRecord() {
     } finally {
       setLoading(false);
     }
-  }, [userDataSession, searchParams, statusSelected]);
+  }, [userDataSession, buildFilters]);
 
   useEffect(() => {
     fetchOrders();
-  }, [fetchOrders, statusSelected]);
+  }, [fetchOrders]);
 
   return (
-    <EstructureCartCheckoutProfile title="Historial de compra">
-      <div className="orders-record">
-        <div className="orders-record__container">
-          <div className="orders-filter-status">
-            <select
-              value={statusSelected}
-              onChange={(e) => setStatusSelected(e.target.value as OrderStatus)}
-            >
-              <option value={OrderStatus.PENDING}>Pendientes</option>
-              <option value={OrderStatus.PAID}>Pagadas</option>
-              <option value={OrderStatus.FULFILLED}>Entregadas</option>
-              <option value={OrderStatus.CANCELLED}>Canceladas</option>
-              <option value={OrderStatus.REFUNDED}>Reembolsadas</option>
-            </select>
-          </div>
-
-          {loading ? (
-            <p>Cargando...</p>
-          ) : error.status ? (
-            <p>{error.message}</p>
-          ) : orders?.orders?.length ? (
-            <Orders orders={orders.orders} />
-          ) : (
-            <p>No hay órdenes</p>
-          )}
+    <div className="orders-record">
+      <div className="orders-record__container">
+        <div className="orders-filter-status">
+          <select
+            value={statusSelected}
+            onChange={(e) => setStatusSelected(e.target.value as OrderStatus)}
+          >
+            <option value={OrderStatus.PENDING}>Pendientes</option>
+            <option value={OrderStatus.PAID}>Pagadas</option>
+            <option value={OrderStatus.FULFILLED}>Entregadas</option>
+            <option value={OrderStatus.CANCELLED}>Canceladas</option>
+            <option value={OrderStatus.REFUNDED}>Reembolsadas</option>
+          </select>
         </div>
+
+        {loading ? (
+          <p>Cargando...</p>
+        ) : error.status ? (
+          <p>{error.message}</p>
+        ) : orders?.orders?.length ? (
+          <Orders orders={orders.orders} />
+        ) : (
+          <p>No hay órdenes</p>
+        )}
       </div>
+    </div>
+  );
+}
+
+function OrdersLoading() {
+  return (
+    <div className="orders-record">
+      <div className="orders-record__container">
+        <p>Cargando historial...</p>
+      </div>
+    </div>
+  );
+}
+
+function OrdersRecord() {
+  return (
+    <EstructureCartCheckoutProfile title="Historial de compra">
+      <Suspense fallback={<OrdersLoading />}>
+        <OrdersContent />
+      </Suspense>
     </EstructureCartCheckoutProfile>
   );
 }

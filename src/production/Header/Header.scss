@@ -64,6 +64,10 @@ $bp-md: 768px;
         transform: translateX(-2px);
       }
     }
+
+    .icono-logout {
+      display: flex;
+    }
   }
 }
 
@@ -104,6 +108,10 @@ $bp-md: 768px;
       }
 
       .icono-user {
+        display: none;
+      }
+
+      .icono-logout {
         display: none;
       }
     }

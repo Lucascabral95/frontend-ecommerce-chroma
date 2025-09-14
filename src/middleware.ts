@@ -3,8 +3,7 @@ import type { NextRequest } from 'next/server';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 const loginRegisterPaths = ['/customer/account/login', '/customer/account/create'];
-// const routesProtecteds = ['/customer/account/cart', '/customer/account/profile'];
-const routesProtecteds = ['jnsadk'];
+const routesProtecteds = ['/customer/account/cart', '/customer/account/profile', '/checkout', '/checkout/cart', '/orders/record', '/orders/detail/:path*'];
 const routeRedirectInMatch = '/'
 
 const KEY_JWT = process.env.KEY_JWT || 'defaultJwtKey';
@@ -54,10 +53,14 @@ export const config = {
   matcher: [
     '/customer/account/login',
     '/customer/account/create',
+    '/customer/account/profile',
 
     '/customer/account/cart',
-    '/customer/account/settings',
 
-    '/customer/account/profile'
+    '/checkout',
+    '/checkout/cart',
+
+    '/orders/record',
+    '/orders/detail/:path*'
   ]
 };

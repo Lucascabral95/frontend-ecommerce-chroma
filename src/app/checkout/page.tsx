@@ -264,6 +264,15 @@ function Checkout() {
     );
   }
 
+  if (!cart) {
+    return (
+      <ProductByIdError
+        title="Carrito vacío"
+        description="Hay tenés ningún checkout porque no agregaste ningún producto al carrito."
+      />
+    );
+  }
+
   return (
     <EstructureCartCheckoutProfile title="Checkout">
       <div className="aver" style={{ width: "100%" }}>

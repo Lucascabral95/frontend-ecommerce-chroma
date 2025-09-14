@@ -7,6 +7,7 @@ import {
   CiShoppingCart,
   CiUser,
   CiViewList,
+  CiPower,
 } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
 import { HiMagnifyingGlass } from "react-icons/hi2";
@@ -20,7 +21,7 @@ import { useCartStore } from "@/lib/zustand/CartZustand";
 import "./Header.scss";
 
 function Header() {
-  const { userDataSession } = useAuthStore();
+  const { userDataSession, logout } = useAuthStore();
   const { cart } = useCartStore();
 
   const [menuClose, setMenuClose] = useState(false);
@@ -73,11 +74,13 @@ function Header() {
             >
               <CiUser className="icon" />
             </Link>
-            <div className="icono">
-              <Link href="/orders/record">
-                <CiViewList className="icon" />
-              </Link>
-            </div>
+            {userDataSession && (
+              <div className="icono">
+                <Link href="/orders/record">
+                  <CiViewList className="icon" />
+                </Link>
+              </div>
+            )}
             <div className="icono" onClick={() => handleCart()}>
               <CiShoppingCart className="icon" />
               {cart?.items?.length !== 0 && (
@@ -86,6 +89,13 @@ function Header() {
                 </div>
               )}
             </div>
+            {userDataSession && (
+              <div className="icono icono-logout" onClick={() => logout()}>
+                <div>
+                  <CiPower className="icon" />
+                </div>
+              </div>
+            )}
           </div>
         </header>
       </SectionStructure>

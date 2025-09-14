@@ -2,7 +2,6 @@
 import { FormEvent, useState, useEffect, useMemo } from "react";
 
 import EstructureCartCheckoutProfile from "@/production/components/EstructureCartCheckoutProfile/EstructureCartCheckoutProfile";
-
 import {
   AddressInterface,
   GetAddressByUserIdInterface,
@@ -13,9 +12,8 @@ import {
   getAddressByUserId,
   updateAddressById,
 } from "@/lib/auth";
-
-import "./Profile.scss";
 import ProductByIdError from "@/production/ProductById/ProductByIdError";
+import "./Profile.scss";
 
 const TIME_TO_CLOSE_TOAST = 1800;
 
