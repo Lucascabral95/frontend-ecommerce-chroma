@@ -21,9 +21,78 @@
 - **Experiencia de Usuario Premium:** UI responsiva, accesible y moderna, animaciones suaves, modo oscuro y componentes reutilizables.
 - **Gestión de Errores y Feedback:** Manejo global de errores, notificaciones contextuales y validación de formularios reactivos con mensajes personalizados.
 - **Optimización de Performance:** Server-Side Rendering, Image Optimization, lazy loading y caching inteligente con Next.js.
+- **Cache Parametrizado Avanzado:** TanStack Query con indexación por query keys únicos, invalidación selectiva y persistencia multi-filtro para optimización de rendimiento empresarial.
 - **Seguridad:** Protección avanzada de rutas, validación de datos y sanitización de inputs.
 - **Testing Extensivo:** Pruebas unitarias y de integración con alta cobertura, asegurando calidad y estabilidad continua.
 - **Integración CI/CD:** Listo para despliegue automatizado en entornos productivos usando Docker y pipelines modernos.
+
+---
+
+## ⚙️ Prueba de Pagos con MercadoPago
+
+Para probar la funcionalidad de pagos integrada con MercadoPago en el entorno de desarrollo, sigue estos pasos:
+
+### 🔐 Credenciales de Prueba
+
+**1. Inicio de Sesión en MercadoPago:**
+
+- **Usuario:** `TESTUSER1220788472`
+- **Contraseña:** `1afnsm5AAE`
+
+### 💳 Datos de Tarjeta de Prueba
+
+**2. Información de Pago:**
+
+- **Método de Pago:** Seleccionar "Elegir otro medio de pago" => "Nueva tarjeta (Crédito, débito o prepaga)"
+- **Número de Tarjeta:** `5031 7557 3453 0604`
+- **Fecha de Caducidad:** `11/30`
+- **Código de Seguridad:** `123`
+- **Nombre del Titular:** `APRO`
+- **DNI:** `12345678`
+
+### 📋 Proceso de Prueba
+
+**3. Flujo Completo:**
+
+1. **Iniciar Sesión:** Iniciá sesión en el ecommerce
+2. **Navegar al Carrito:** Agregá productos al carrito de compras
+3. **Iniciar Sesión en MercadoPago:** Usá las credenciales de prueba
+4. **Proceder al Checkout:** Completá la información de envío
+5. **Completar Pago:** Ingresá los datos de la tarjeta de prueba
+6. **Confirmar Transacción:** Verificá el estado del pago y la creación de la orden
+
+### ✅ Resultados Esperados
+
+- **Estado de Pago:** Aprobado ✅
+- **Respuesta del Webhook:** Confirmación automática del pago
+- **Actualización de Stock:** Reducción automática del inventario
+- **Estado de Orden:** Cambia a "Pagado" en tiempo real y se confirma el descuento de stock de los productos comprados (el stock se guarda al usuario durante 10 minutos para que no se quede sin stock en medio del pago)
+
+### ⚠️ Importante
+
+> **Nota:** Estos son datos de prueba exclusivos para el entorno de desarrollo. En producción, MercadoPago procesará pagos reales con tarjetas y cuentas válidas.
+
+### 🔄 Estados de Prueba Adicionales
+
+Para probar diferentes escenarios, puedes usar estos nombres de titular:
+
+| Nombre | Estado        | Descripción                                |
+| ------ | ------------- | ------------------------------------------ |
+| `APRO` | ✅ Aprobado   | Pago aprobado exitosamente                 |
+| `CONT` | ⏳ Pendiente  | Pago pendiente de procesamiento            |
+| `OTHE` | ❌ Rechazado  | Rechazado por error general                |
+| `CALL` | 📞 Validación | Rechazado con validación para autorizar    |
+| `FUND` | 💰 Fondos     | Rechazado por cantidad insuficiente        |
+| `SECU` | 🔒 Seguridad  | Rechazado por código de seguridad inválido |
+| `EXPI` | 📅 Expirada   | Rechazado por problema con la fecha        |
+| `FORM` | 📝 Formulario | Rechazado por error en formulario          |
+
+### 🎯 Consejos de Prueba
+
+- Mantené la sesión iniciada con la cuenta de prueba durante todo el proceso
+- Verificá que el webhook responda correctamente en el backend
+- Comprobá que las notificaciones por email se envíen apropiadamente
+- Testeá la sincronización del estado de la orden en tiempo real
 
 ---
 
