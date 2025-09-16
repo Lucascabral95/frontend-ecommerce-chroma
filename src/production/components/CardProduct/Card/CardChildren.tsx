@@ -1,9 +1,7 @@
-import React from "react";
-
-import { Product } from "@/Insfraestructure/Interfaces/products/product.interface";
 import Link from "next/link";
 import Image from "next/image";
 
+import { Product } from "@/Insfraestructure/Interfaces/products/product.interface";
 import "./CardChildren.scss";
 
 interface Props {

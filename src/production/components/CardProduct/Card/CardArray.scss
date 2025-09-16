@@ -2,6 +2,30 @@ $card-gap: 16px;
 $margin-base: 0px 0 0 0;
 $padding-base: 0 0 20px 0;
 
+$text-primary: black;
+$text-secondary: #666666;
+$background-clean: white;
+$border-subtle: rgba(0, 0, 0, 0.08);
+$shadow-card: rgba(0, 0, 0, 0.04);
+$shadow-hover: rgba(0, 0, 0, 0.12);
+
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 2vw, 8px);
+  position: relative;
+
+  @media (max-width: 768px) {
+    gap: 0;
+  }
+}
+
+.carousel-container {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
 .card-carousel {
   display: flex;
   gap: $card-gap;
@@ -13,7 +37,8 @@ $padding-base: 0 0 20px 0;
   scroll-behavior: smooth;
   cursor: grab;
   user-select: none;
-  touch-action: pan-x;
+  touch-action: pan-y pinch-zoom;
+
   scrollbar-width: none;
   -ms-overflow-style: none;
 
@@ -62,6 +87,106 @@ $padding-base: 0 0 20px 0;
   }
 }
 
+.carousel-arrow-desktop {
+  position: relative;
+  background: $background-clean;
+  color: $text-primary;
+  border: 1px solid $border-subtle;
+  border-radius: var(--rad-s, 8px);
+  width: clamp(36px, 4vw, 42px);
+  height: clamp(36px, 4vw, 42px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  user-select: none;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px $shadow-card;
+
+  &:hover:not(.disabled) {
+    background: $background-clean;
+    color: $text-primary;
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 16px $shadow-hover;
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px $shadow-card;
+  }
+
+  &.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #fafafa;
+    color: #cccccc;
+    border-color: #f0f0f0;
+    box-shadow: none;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  svg {
+    transition: transform 0.15s ease;
+  }
+
+  &:hover:not(.disabled) svg {
+    transform: scale(1.05);
+  }
+}
+
+.carousel-arrow-mobile {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.92);
+  color: $text-primary;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--rad-s, 6px);
+  width: clamp(32px, 8vw, 40px);
+  height: clamp(32px, 8vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.15s ease;
+  user-select: none;
+  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    background: $background-clean;
+    color: $text-primary;
+    border-color: rgba(0, 0, 0, 0.12);
+    transform: translateY(-50%) scale(1.02);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.98);
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+}
+
+.carousel-arrow-mobile-prev {
+  left: clamp(8px, 2vw, 16px);
+}
+
+.carousel-arrow-mobile-next {
+  right: clamp(8px, 2vw, 16px);
+}
+
 img {
   pointer-events: none;
   -webkit-user-drag: none;
@@ -76,6 +201,40 @@ img {
 
 .card-carousel:not(.dragging) {
   .card-item:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+  }
+}
+
+.carousel-arrow-desktop:focus,
+.carousel-arrow-mobile:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1200px) {
+  .carousel-wrapper {
+    gap: clamp(12px, 1.5vw, 24px);
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-wrapper {
+    gap: 0;
+  }
+
+  .carousel-container {
+    padding: 0 clamp(2px, 1vw, 8px);
+  }
+}
+
+@media (max-width: 360px) {
+  .carousel-arrow-mobile {
+    width: 28px;
+    height: 28px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 }

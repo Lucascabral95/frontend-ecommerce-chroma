@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import useProducts from "@/production/Hooks/useProducts";
 import CardMap from "./CardArray";
 import CardError from "./CardError/CardError";

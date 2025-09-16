@@ -17,7 +17,7 @@ const Images: ImageInterface[] = [
   },
   {
     img: "/img/port-dos.webp",
-    url: "/section/product?categoryId=3c4d5e6f-7a8b-4901-c234-3456789abcde&minPrice=25990",
+    url: "/section/product?categoryId=3c4d5e6f-7a8b-4901-c234-3456789abcde&sortOrder=asc&sortBy=basePrice",
   },
   {
     img: "/img/port-tres.webp",

@@ -1,5 +1,6 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CiFilter } from "react-icons/ci";
 
 import useProducts from "@/production/Hooks/useProducts";
@@ -20,11 +21,18 @@ interface Props {
 }
 
 function BodyFilterProducts({ id, params }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [orderSelected, setOrderSelected] =
-    useState<FilterProductSortFieldEnum>(FilterProductSortFieldEnum.CREATED_AT);
+    useState<FilterProductSortFieldEnum>(
+      (searchParams.get("sortBy") as FilterProductSortFieldEnum) ||
+        FilterProductSortFieldEnum.CREATED_AT
+    );
   const [orderDirection, setOrderDirection] = useState<SortOrderEnum>(
-    SortOrderEnum.DESC
+    (searchParams.get("sortOrder") as SortOrderEnum) || SortOrderEnum.DESC
   );
+
   const [openFilters, setOpenFilters] = useState<boolean>(false);
 
   const filter = useMemo<ProductFilter>(() => {
@@ -35,17 +43,6 @@ function BodyFilterProducts({ id, params }: Props) {
       sortOrder: orderDirection,
     };
 
-    if (params?.size && typeof params.size === "string") {
-      baseFilter.size;
-    }
-    if (
-      params?.categoryId &&
-      typeof params.categoryId === "string" &&
-      params.categoryId.includes(",")
-    ) {
-      baseFilter.categoryId;
-    }
-
     if (id && id !== "all") {
       return { ...baseFilter, categoryId: id };
     }
@@ -55,15 +52,19 @@ function BodyFilterProducts({ id, params }: Props) {
 
   const { products } = useProducts(undefined, filter);
 
-  const handleOrderSelectedChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleOrderSelectedChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const [field, dir] = e.target.value.split("|") as [
       FilterProductSortFieldEnum,
       SortOrderEnum
     ];
+
     setOrderSelected(field);
     setOrderDirection(dir);
+
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("sortBy", field);
+    newParams.set("sortOrder", dir);
+    router.replace(`?${newParams.toString()}`);
   };
 
   const selectValue = `${orderSelected}|${orderDirection}`;
