@@ -8,6 +8,13 @@ import BodyFilterProducts from "@/production/FilterProducts/BodyFilterProducts/B
 import { ProductFilter } from "@/Insfraestructure/Interfaces/products/product.interface";
 import BodyProductsCategories from "@/Shared/BodyProducts/BodyProductsCategories";
 import { BodyProductsCategoriesInterface } from "@/Insfraestructure/Interfaces/bodyproducts/bodyproducts.interface";
+import { useSEO } from "@/production/Hooks/useSEO";
+import SEO from "@/production/components/SEO";
+import {
+  getOptimizedDescription,
+  getOptimizedKeywords,
+  getOptimizedTitle,
+} from "@/Shared/utils/functions-seo";
 import "./ProductByCategory.scss";
 
 function ProductByCategoryContent() {
@@ -17,45 +24,59 @@ function ProductByCategoryContent() {
 
   const { category } = useParams() as { category: string };
   const searchParams = useSearchParams();
-
   const paramsProduct: ProductFilter = useMemo(
     () => Object.fromEntries(searchParams),
     [searchParams]
   );
+
+  const seoData = useSEO({
+    title: getOptimizedTitle(category),
+    description: getOptimizedDescription(category),
+    path: `/section/product/${category}`,
+    image: "/img/logo-chroma-ecommerce.png",
+    keywords: getOptimizedKeywords(category),
+    type: "website",
+    noIndex: false,
+  });
 
   const categorySearched = useMemo(() => {
     return allCategories.find((cat) => cat.id === category);
   }, [allCategories, category]);
 
   return (
-    <div className="product-by-category">
-      <div className="product-by-category__container">
-        <div className="sections-index">
-          <Link className="link" href="/">
-            Home
-          </Link>
-          <p className="separator-bar">/</p>
-          <Link className="link" href={`/section/product/${category}`}>
-            {category?.toUpperCase()}
-          </Link>
+    <>
+      <SEO {...seoData} />
+      <div className="product-by-category">
+        <div className="product-by-category__container">
+          <div className="sections-index">
+            <Link className="link" href="/">
+              Home
+            </Link>
+            <p className="separator-bar">/</p>
+            <Link className="link" href={`/section/product/${category}`}>
+              {category?.toUpperCase()}
+            </Link>
+          </div>
+
+          {categorySearched && (
+            <>
+              <div className="title-category">
+                <h2 className="title-category-text">
+                  {categorySearched.title}
+                </h2>
+              </div>
+              <div className="description-category">
+                <h2 className="description-category-text">
+                  {categorySearched.description}
+                </h2>
+              </div>
+            </>
+          )}
+
+          <BodyFilterProducts id={category} params={paramsProduct} />
         </div>
-
-        {categorySearched && (
-          <>
-            <div className="title-category">
-              <h2 className="title-category-text">{categorySearched.title}</h2>
-            </div>
-            <div className="description-category">
-              <h2 className="description-category-text">
-                {categorySearched.description}
-              </h2>
-            </div>
-          </>
-        )}
-
-        <BodyFilterProducts id={category} params={paramsProduct} />
       </div>
-    </div>
+    </>
   );
 }
 

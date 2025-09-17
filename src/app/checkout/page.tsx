@@ -10,6 +10,8 @@ import Toast from "@/Shared/Components/Toast";
 import DetailCheckoutCart from "@/production/components/Checkout/DetailCheckoutCart/DetailCheckoutCart";
 import ProductByIdError from "@/production/ProductById/ProductByIdError";
 import "./Checkout.scss";
+import { useSEO } from "@/production/Hooks/useSEO";
+import SEO from "@/production/components/SEO";
 
 const TOAST_CONFIG = {
   SUCCESS_DURATION: 1800,
@@ -165,6 +167,18 @@ function Checkout() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const useData = useSEO({
+    title: "Finalizar Compra - Pago Seguro | Chroma",
+    description:
+      "Completa tu compra de forma segura en Chroma. Múltiples métodos de pago, envío gratuito desde $25.000 y garantía de devolución. Checkout rápido y protegido.",
+    path: "/checkout",
+    image: "/img/logo-chroma-ecommerce.png",
+    keywords:
+      "finalizar compra, pago seguro, checkout Chroma, métodos pago, compra online segura, envío gratis",
+    type: "website",
+    noIndex: true,
+  });
+
   const { cart } = useCartStore();
   const { toast, showToast } = useToast();
 
@@ -275,6 +289,7 @@ function Checkout() {
 
   return (
     <EstructureCartCheckoutProfile title="Checkout">
+      <SEO {...useData} />
       <div className="aver" style={{ width: "100%" }}>
         <DetailCheckoutCart cart={cart} />
       </div>

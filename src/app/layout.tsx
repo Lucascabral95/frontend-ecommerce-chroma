@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 import TansTackQueryGlobal from "@/Insfraestructure/Tans-Tack-Query/TansTackQuery.global";
@@ -7,6 +6,7 @@ import Footer from "@/production/components/Footer/Footer";
 import Subscribe from "@/production/Benefits/Subscribe/Subscribe";
 import { StoreInitializer } from "@/providers/zustand.provider";
 import MarqueeBanner from "@/production/components/Marquee/Maraquee";
+import ReactHelmetAsyncProvider from "@/providers/react-helmet-async";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,13 +18,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Chroma",
-  description: "Chroma - Indumentaria masculina",
-  keywords: ["ecommerce", "shop", "store"],
-  authors: [{ name: "Lucas Cabral" }],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,15 +28,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen antialiased`}
       >
-        <StoreInitializer>
-          <TansTackQueryGlobal>
-            <MarqueeBanner />
-            <Header />
-            <main className="grow">{children}</main>
-            <Subscribe />
-            <Footer />
-          </TansTackQueryGlobal>
-        </StoreInitializer>
+        <ReactHelmetAsyncProvider>
+          <StoreInitializer>
+            <TansTackQueryGlobal>
+              <MarqueeBanner />
+              <Header />
+              <main className="grow">{children}</main>
+              <Subscribe />
+              <Footer />
+            </TansTackQueryGlobal>
+          </StoreInitializer>
+        </ReactHelmetAsyncProvider>
       </body>
     </html>
   );

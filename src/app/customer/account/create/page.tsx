@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 
 import Toast from "@/Shared/Components/Toast";
 import "./create.scss";
+import { useSEO } from "@/production/Hooks/useSEO";
+import SEO from "@/production/components/SEO";
 
 const TIME_TO_CLOSE_TOAST = 1800;
 
@@ -24,8 +26,17 @@ function CreateUser() {
     message: "",
     error: false,
   });
-
   const router = useRouter();
+
+  const useData = useSEO({
+    title: "Crear cuenta - Chroma",
+    description: "Crear cuenta - Chroma",
+    path: `/customer/account/create`,
+    image: "/img/logo-chroma-ecommerce.png",
+    keywords:
+      "crear cuenta, registro, Chroma, registro de usuario, usuario registrado, usuario no registrado, usuario no autenticado, usuario autenticado, usuario no autorizado, usuario autorizado",
+    type: "website",
+  });
 
   const [errorEmail, setErrorEmail] = useState<string>("");
   const [errorsPassword, setErrorsPassword] = useState<string[]>([]);
@@ -98,87 +109,92 @@ function CreateUser() {
 
   return (
     <SectionStructure background="#F5F5F5">
-      <div className="create">
-        <div className="create__container">
-          <div className="register">
-            <h3> Crear cuenta </h3>
-            <p> Datos personales </p>
-            <form className="formulario" onSubmit={registerSubmit}>
-              <div className="form-group">
-                <label htmlFor="name">Nombre completo</label>
-                <input
-                  style={{ borderColor: errorName ? "red" : "" }}
-                  type="text"
-                  id="name"
-                  placeholder="Ej. Lucas Cabral"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                {errorName && <p className="text-text-error">• {errorName}</p>}
-              </div>
-              <div className="form-group-email-password">
-                <div className="form-group-email">
-                  <label htmlFor="email">Email</label>
+      <>
+        <SEO {...useData} />
+        <div className="create">
+          <div className="create__container">
+            <div className="register">
+              <h3> Crear cuenta </h3>
+              <p> Datos personales </p>
+              <form className="formulario" onSubmit={registerSubmit}>
+                <div className="form-group">
+                  <label htmlFor="name">Nombre completo</label>
                   <input
-                    style={{ borderColor: errorEmail ? "red" : "" }}
-                    type="email"
-                    id="email"
-                    placeholder="Ej. Ejemplo@mail.com"
+                    style={{ borderColor: errorName ? "red" : "" }}
+                    type="text"
+                    id="name"
+                    placeholder="Ej. Lucas Cabral"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
-                  {errorEmail && (
-                    <p className="text-text-error">• {errorEmail}</p>
+                  {errorName && (
+                    <p className="text-text-error">• {errorName}</p>
                   )}
                 </div>
-                <div className="form-group-email">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    style={{
-                      borderColor: errorsPassword.length > 0 ? "red" : "",
-                    }}
-                    type="password"
-                    id="password"
-                    placeholder="Aa123456"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  {errorsPassword.length > 0 && (
-                    <div className="text-error">
-                      {errorsPassword.map((error) => (
-                        <p className="text-text-error" key={error}>
-                          • {error}
-                        </p>
-                      ))}
-                    </div>
-                  )}
+                <div className="form-group-email-password">
+                  <div className="form-group-email">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      style={{ borderColor: errorEmail ? "red" : "" }}
+                      type="email"
+                      id="email"
+                      placeholder="Ej. Ejemplo@mail.com"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    {errorEmail && (
+                      <p className="text-text-error">• {errorEmail}</p>
+                    )}
+                  </div>
+                  <div className="form-group-email">
+                    <label htmlFor="password">Password</label>
+                    <input
+                      style={{
+                        borderColor: errorsPassword.length > 0 ? "red" : "",
+                      }}
+                      type="password"
+                      id="password"
+                      placeholder="Aa123456"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {errorsPassword.length > 0 && (
+                      <div className="text-error">
+                        {errorsPassword.map((error) => (
+                          <p className="text-text-error" key={error}>
+                            • {error}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {errors?.status != null && (
-                <p className="text-error">
-                  {errors.status} - {errors.message}
-                </p>
-              )}
+                {errors?.status != null && (
+                  <p className="text-error">
+                    {errors.status} - {errors.message}
+                  </p>
+                )}
 
-              <div className="form-group-button">
-                <Link className="link-back" href="/customer/account/login">
-                  <BsArrowLeftShort className="icon" />
-                  <p> Volver al login </p>
-                </Link>
-                <button type="submit">CREAR CUENTA</button>
-              </div>
-            </form>
+                <div className="form-group-button">
+                  <Link className="link-back" href="/customer/account/login">
+                    <BsArrowLeftShort className="icon" />
+                    <p> Volver al login </p>
+                  </Link>
+                  <button type="submit">CREAR CUENTA</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
 
-      {toastMessage.message && (
-        <Toast message={toastMessage.message} error={toastMessage.error} />
-      )}
+        {toastMessage.message && (
+          <Toast message={toastMessage.message} error={toastMessage.error} />
+        )}
+      </>
     </SectionStructure>
   );
 }

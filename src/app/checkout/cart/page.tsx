@@ -9,6 +9,8 @@ import ProductByIdLoading from "@/production/ProductById/ProductByIdLoading";
 import { getCartByUserId } from "@/lib/CartsApi";
 import { useCartStore } from "@/lib/zustand/CartZustand";
 import "./CartPage.scss";
+import { useSEO } from "@/production/Hooks/useSEO";
+import SEO from "@/production/components/SEO";
 
 type LoadingState = "idle" | "loading" | "success" | "error" | "empty";
 
@@ -16,6 +18,18 @@ function CartPage() {
   const { cart } = useCartStore();
   const { userDataSession } = useAuthStore();
   const [loadingState, setLoadingState] = useState<LoadingState>("idle");
+
+  const useData = useSEO({
+    title: "Mi Carrito - Revisar Productos | Chroma",
+    description:
+      "Revisa los productos en tu carrito de compras. Envío gratuito desde $25.000, múltiples métodos de pago y compra 100% segura en Chroma.",
+    path: "/checkout/cart",
+    image: "/img/logo-chroma-ecommerce.png",
+    keywords:
+      "carrito compras, revisar productos, envío gratis Chroma, métodos pago seguros, indumentaria masculina",
+    type: "website",
+    noIndex: true,
+  });
 
   const fetchCartData = useCallback(
     async (userId: string, signal: AbortSignal) => {
@@ -82,6 +96,7 @@ function CartPage() {
       title="Carrito de compras"
       background="#F5F5F5"
     >
+      <SEO {...useData} />
       <div className="cart-section">
         <div className="cart-section__container">
           <EstructureCart cartById={cart} />

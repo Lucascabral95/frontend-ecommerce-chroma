@@ -13,12 +13,15 @@ import ProductByIdLoading from "@/production/ProductById/ProductByIdLoading";
 import ProductByIdError from "@/production/ProductById/ProductByIdError";
 import { useCartStore } from "@/lib/zustand/CartZustand";
 import Toast from "@/Shared/Components/Toast";
+import { useSEO } from "@/production/Hooks/useSEO";
+import SEO from "@/production/components/SEO";
 import "./ProductId.scss";
 
 const TOAST_TIME = 1800;
 
 function ProductID() {
   const { id } = useParams();
+
   const [quantity, setQuantity] = useState<number>(1);
   const [sizeSelected, setSizeSelected] = useState<Size | null>(null);
   const [stockLimit, setStockLimit] = useState<number>(0);
@@ -32,6 +35,33 @@ function ProductID() {
   } = useProducts(id as string);
 
   const { cart, addToCart } = useCartStore();
+
+  const seoData = useSEO({
+    title: (() => {
+      if (isLoading) return "Cargando Producto - Chroma";
+      if (isError) return "Error al Cargar Producto - Chroma";
+      if (!productById) return "Producto No Encontrado - Chroma";
+      return `${productById.name} - Indumentaria Masculina`;
+    })(),
+
+    description: (() => {
+      if (isLoading) return "Cargando información del producto...";
+      if (isError) return "Error al cargar el producto. Intenta nuevamente.";
+      if (!productById) return "El producto solicitado no fue encontrado.";
+
+      const desc =
+        productById.description?.substring(0, 100) || productById.name;
+      return `${desc}... Desde $${productById.basePrice}. Envío gratis desde $25.000. 3 cuotas sin interés en Chroma.`;
+    })(),
+
+    path: `/product/${id}`,
+    image: productById?.images?.[0]?.url ?? "/img/logo-chroma-ecommerce.png",
+    keywords: productById
+      ? `${productById.name}, indumentaria masculina, ropa hombre, Chroma`
+      : "productos, ropa masculina, Chroma",
+    type: "product",
+    noIndex: false,
+  });
 
   const aumentarCantidad = () => {
     setQuantity((prev) => (prev < stockLimit ? prev + 1 : prev));
@@ -91,6 +121,7 @@ function ProductID() {
 
   return (
     <SectionStructure>
+      <SEO {...seoData} />
       <div className="product-id">
         <div className="product-id__container">
           <div className="grid">

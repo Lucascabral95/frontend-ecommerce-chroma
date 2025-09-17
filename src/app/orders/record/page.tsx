@@ -13,8 +13,20 @@ import {
 import { FilstersOrdersInterface } from "@/Insfraestructure/Interfaces/Orders/Orders";
 import Orders from "@/production/components/Orders/Orders";
 import "./OrdersRecord.scss";
+import { useSEO } from "@/production/Hooks/useSEO";
+import SEO from "@/production/components/SEO";
 
 function OrdersContent() {
+  const seoData = useSEO({
+    title: "Historial de órdenes - Chroma",
+    description: "Historial de órdenes - Chroma",
+    path: "/orders/record",
+    image: "/img/logo-chroma-ecommerce.png",
+    keywords:
+      "historial de órdenes, órdenes, Chroma, historial de compras, compras aprovadas, compras rechazadas, compras pendientes, compras entregadas, compras canceladas, compras reembolsadas",
+    type: "website",
+    noIndex: true,
+  });
   const { userDataSession } = useAuthStore();
   const searchParams = useSearchParams();
 
@@ -66,32 +78,35 @@ function OrdersContent() {
   }, [fetchOrders]);
 
   return (
-    <div className="orders-record">
-      <div className="orders-record__container">
-        <div className="orders-filter-status">
-          <select
-            value={statusSelected}
-            onChange={(e) => setStatusSelected(e.target.value as OrderStatus)}
-          >
-            <option value={OrderStatus.PENDING}>Pendientes</option>
-            <option value={OrderStatus.PAID}>Pagadas</option>
-            <option value={OrderStatus.FULFILLED}>Entregadas</option>
-            <option value={OrderStatus.CANCELLED}>Canceladas</option>
-            <option value={OrderStatus.REFUNDED}>Reembolsadas</option>
-          </select>
-        </div>
+    <>
+      <SEO {...seoData} />
+      <div className="orders-record">
+        <div className="orders-record__container">
+          <div className="orders-filter-status">
+            <select
+              value={statusSelected}
+              onChange={(e) => setStatusSelected(e.target.value as OrderStatus)}
+            >
+              <option value={OrderStatus.PENDING}>Pendientes</option>
+              <option value={OrderStatus.PAID}>Pagadas</option>
+              <option value={OrderStatus.FULFILLED}>Entregadas</option>
+              <option value={OrderStatus.CANCELLED}>Canceladas</option>
+              <option value={OrderStatus.REFUNDED}>Reembolsadas</option>
+            </select>
+          </div>
 
-        {loading ? (
-          <p>Cargando...</p>
-        ) : error.status ? (
-          <p>{error.message}</p>
-        ) : orders?.orders?.length ? (
-          <Orders orders={orders.orders} />
-        ) : (
-          <p>No hay órdenes</p>
-        )}
+          {loading ? (
+            <p>Cargando...</p>
+          ) : error.status ? (
+            <p>{error.message}</p>
+          ) : orders?.orders?.length ? (
+            <Orders orders={orders.orders} />
+          ) : (
+            <p>No hay órdenes</p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
