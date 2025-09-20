@@ -1,4 +1,6 @@
+"use client";
 import { Geist, Geist_Mono } from "next/font/google";
+import { usePathname } from "next/navigation";
 import "@/app/globals.css";
 import TansTackQueryGlobal from "@/Insfraestructure/Tans-Tack-Query/TansTackQuery.global";
 import Header from "@/production/Header/Header";
@@ -18,11 +20,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const ADMIN_BASE_ROUTE = "/api/dashboard";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname.startsWith(ADMIN_BASE_ROUTE);
+
   return (
     <html lang="en">
       <body
@@ -31,8 +38,8 @@ export default function RootLayout({
         <ReactHelmetAsyncProvider>
           <StoreInitializer>
             <TansTackQueryGlobal>
-              <MarqueeBanner />
-              <Header />
+              {!isAdminRoute && <MarqueeBanner />}
+              {!isAdminRoute && <Header />}
               <main className="grow">{children}</main>
               <Subscribe />
               <Footer />

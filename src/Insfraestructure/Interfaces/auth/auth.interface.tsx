@@ -30,3 +30,11 @@ export interface JwtPayload {
   iat: number;
   exp: number;
 }
+
+export interface JwtPayloadData {
+  id: string;
+  name: string;
+  email: string;
+  iat: number;
+  exp: number;
+}

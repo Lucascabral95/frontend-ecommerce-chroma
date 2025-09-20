@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./Table.scss";
 
 interface Props<T> {
