@@ -1,0 +1,190 @@
+.table-of-dashboard {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f3f4f6;
+  --text: #1f2937;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --hover: #f9fafb;
+  --primary: #111827;
+  --thead-bg: #0f172a;
+  --thead-text: #ffffff;
+  --thead-border: #0b1220;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  width: 100%;
+  margin: 1.5rem 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+}
+
+.table-of-dashboard__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-1);
+}
+
+.table-of-dashboard__container {
+  width: 100%;
+  background: var(--surface);
+  border-radius: var(--radius-8);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0))
+      left/16px 100% no-repeat,
+    linear-gradient(to left, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0)) right/16px
+      100% no-repeat;
+  background-attachment: local, local;
+}
+
+.modern-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--thead-bg);
+    border-bottom: 2px solid var(--thead-border);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    th {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--thead-text);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--thead-border);
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:nth-child(odd) {
+        background: #fcfcfc;
+      }
+      &:hover {
+        background: var(--hover);
+      }
+      &:focus-within {
+        outline: 2px solid rgba(0, 0, 0, 0.05);
+        outline-offset: -2px;
+      }
+    }
+  }
+}
+
+/* Celdas y acciones */
+.table-row {
+  .row-data {
+    padding: 0.9rem 1rem;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--text), #000 10%);
+
+    /* Opcional: enfatizar primera columna (Nombre) */
+    &--strong {
+      color: #111827;
+      font-weight: 600;
+    }
+  }
+
+  .update-delete {
+    padding: 0.9rem 1rem;
+    text-align: right;
+    white-space: nowrap;
+
+    .icono {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin-left: 0.4rem;
+      border-radius: var(--radius-6);
+      border: 1px solid transparent;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: color-mix(in srgb, var(--primary) 3%, #fff);
+        border-color: var(--border);
+      }
+      .icon {
+        font-size: 1.05rem;
+        color: var(--text);
+        transition: color 0.2s ease, transform 0.15s ease;
+      }
+      .icon.warn {
+        color: var(--warning);
+      }
+      .icon.danger {
+        color: var(--danger);
+      }
+      &:active .icon {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 1024px) {
+  .modern-table {
+    min-width: 680px;
+    font-size: 0.85rem;
+  }
+  .table-row .row-data,
+  .update-delete {
+    padding: 0.75rem 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-table {
+    min-width: 640px;
+    font-size: 0.82rem;
+  }
+}

@@ -42,7 +42,7 @@ export default function RootLayout({
               {!isAdminRoute && <Header />}
               <main className="grow">{children}</main>
               <Subscribe />
-              <Footer />
+              {!isAdminRoute && <Footer />}
             </TansTackQueryGlobal>
           </StoreInitializer>
         </ReactHelmetAsyncProvider>

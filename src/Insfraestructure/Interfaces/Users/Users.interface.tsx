@@ -12,7 +12,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  roles: Role[];
+  roles?: Role[];
   addresses: Address[];
   carts: Cart[];
 }
@@ -43,8 +43,9 @@ export interface Cart {
 }
 
 export interface Role {
-  userId: string;
-  roleId: string;
+  role: {
+    name?: string;
+  };
 }
 
 export interface UsersFilters {
@@ -58,5 +59,28 @@ export interface UsersFilters {
 export interface RegisterUserInterface {
   email: string;
   name: string;
-  password: string;
+  hashedPassword: string;
+}
+
+export interface ResponseRegisterUserInterface {
+  user: UserRR;
+  message: string;
+}
+
+export interface UserRR {
+  id: string;
+  email: string;
+  name: string;
+}
+
+// Update User
+export interface UpdateUserDtoInterface {
+  name?: string;
+  email?: string;
+}
+
+export interface ResponseUpdateUserInterface {
+  id: string;
+  email: string;
+  name: string;
 }
