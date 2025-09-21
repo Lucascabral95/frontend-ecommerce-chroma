@@ -42,16 +42,21 @@ $transition-speed: 0.3s;
     }
 
     .e {
-      h2 {
-        color: black;
-        font-weight: 600;
-        font-size: 1.5rem;
-        margin: 0 0 24px 0;
-        text-transform: uppercase;
-        text-align: center;
+      .link-title {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        .link-title__title {
+          color: black;
+          font-weight: 600;
+          font-size: 1.5rem;
+          margin: 0 0 24px 0;
+          text-transform: uppercase;
+          text-align: center;
 
-        @media (min-width: 768px) {
-          text-align: left;
+          @media (min-width: 768px) {
+            text-align: left;
+          }
         }
       }
 

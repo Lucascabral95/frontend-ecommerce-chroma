@@ -1,8 +1,8 @@
 "use client";
+import { useMemo, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { GoPencil } from "react-icons/go";
 import { CiTrash } from "react-icons/ci";
-import { useMemo, useState, useCallback } from "react";
 
 import StructureDashboard from "@/production/Dashboard/components/StructureDashboard";
 import useUsers from "@/production/Hooks/useUsers";
@@ -12,6 +12,10 @@ import AddUserModal from "@/production/Dashboard/components/Modals/AddProduct/Ad
 import UpdateUserModal from "@/production/Dashboard/components/Modals/UpdateUser/UpdateUser";
 import { ResponseUpdateUserInterface } from "@/Insfraestructure/Interfaces/Users/Users.interface";
 import ConfirmComponent from "@/production/Dashboard/components/Confirm/Confirm";
+import LoadingState from "@/production/Dashboard/components/shared/LoadingState";
+import ErrorState from "@/production/Dashboard/components/shared/ErrorState";
+import EmptyState from "@/production/Dashboard/components/shared/EmptyState";
+import NoResultsState from "@/production/Dashboard/components/shared/NoResultsState";
 
 const CONDITIONS = { search: true, order: false };
 const HEADERS = ["Nombre", "Email", "Roles", "Acciones"];
@@ -36,56 +40,6 @@ const STYLES = {
     borderRadius: "4px",
   },
 } as const;
-
-const LoadingState = () => (
-  <div style={STYLES.center}>
-    <p style={{ color: "#bbbbbb" }}>Cargando usuarios...</p>
-  </div>
-);
-
-const ErrorState = ({
-  error,
-  onRetry,
-}: {
-  error: any;
-  onRetry: () => void;
-}) => (
-  <div style={STYLES.center}>
-    <p style={{ color: "red" }}>
-      Error al cargar usuarios: {error?.message || "Error desconocido"}
-    </p>
-    <button
-      onClick={onRetry}
-      style={{ ...STYLES.button, backgroundColor: "red" }}
-    >
-      Reintentar
-    </button>
-  </div>
-);
-
-const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
-  <div style={STYLES.center}>
-    <p>No hay usuarios registrados</p>
-    <button onClick={onAdd} style={STYLES.button}>
-      Agregar primer usuario
-    </button>
-  </div>
-);
-
-const NoResultsState = ({
-  searchName,
-  onClear,
-}: {
-  searchName: string;
-  onClear: () => void;
-}) => (
-  <div style={STYLES.center}>
-    <p>No se encontraron usuarios con el nombre {searchName}</p>
-    <button onClick={onClear} style={STYLES.button}>
-      Limpiar búsqueda
-    </button>
-  </div>
-);
 
 function DashboardUsuarios() {
   const searchParams = useSearchParams();
@@ -193,7 +147,7 @@ function DashboardUsuarios() {
       )}
 
       {isSearching && !hasSearchResults ? (
-        <NoResultsState searchName={searchName} onClear={handleClearSearch} />
+        <NoResultsState searchTerm={searchName} onClear={handleClearSearch} />
       ) : (
         <TableDashboard
           headers={HEADERS}

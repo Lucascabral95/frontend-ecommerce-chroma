@@ -4,6 +4,12 @@ import {
   SortOrderEnum,
 } from "../filters/filters.interface";
 
+export enum ProductStatusString {
+  ACTIVE = "ACTIVE",
+  DRAFT = "DRAFT",
+  ARCHIVED = "ARCHIVED",
+}
+
 export interface ProductFilter {
   sortOrder?: SortOrderEnum;
   sortBy?: FilterProductSortFieldEnum;
@@ -37,7 +43,8 @@ export interface Product {
   brandId?: string;
   categoryId?: string;
   basePrice: number;
-  status: ProductStatus;
+  // status: ProductStatus;
+  status: ProductStatusString;
 
   variants: Variant[];
   images: Images[];
@@ -77,4 +84,26 @@ export interface Variant {
   weightGrams: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Create product
+export interface CreateProduct {
+  name: string;
+  slug?: string;
+  description?: string;
+  brandId?: string;
+  categoryId?: string;
+  basePrice: number;
+  // status: ProductStatus;
+  status: ProductStatusString;
+}
+
+// Update product
+export interface UpdateProduct {
+  name?: string;
+  description?: string;
+  brandId?: string;
+  categoryId?: string;
+  basePrice: number;
+  status?: ProductStatusString;
 }

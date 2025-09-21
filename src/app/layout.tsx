@@ -41,7 +41,7 @@ export default function RootLayout({
               {!isAdminRoute && <MarqueeBanner />}
               {!isAdminRoute && <Header />}
               <main className="grow">{children}</main>
-              <Subscribe />
+              {!isAdminRoute && <Subscribe />}
               {!isAdminRoute && <Footer />}
             </TansTackQueryGlobal>
           </StoreInitializer>

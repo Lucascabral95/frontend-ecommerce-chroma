@@ -103,6 +103,10 @@ $bp-desktop: 1024px;
           opacity: 0.9;
         }
       }
+
+      .button-success {
+        background-color: green;
+      }
     }
 
     @media (max-width: $bp-mobile) {

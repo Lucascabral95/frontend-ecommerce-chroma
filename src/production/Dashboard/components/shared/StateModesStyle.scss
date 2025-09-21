@@ -1,0 +1,192 @@
+$text: #1f2937 !default;
+$text-muted: #6b7280 !default;
+$highlight: #374151 !default;
+
+$primary: #2563eb !default;
+$primary-600: #1d4ed8 !default;
+$primary-700: #1e40af !default;
+
+$danger: #dc2626 !default;
+$danger-600: #b91c1c !default;
+$danger-700: #991b1b !default;
+
+$spinner-track: #e5e7eb !default;
+$spinner-head: $primary !default;
+
+$radius-sm: 8px !default;
+
+$space-1: 8px !default;
+$space-2: 12px !default;
+$space-3: 16px !default;
+$space-4: 20px !default;
+$space-5: 24px !default;
+$space-6: 28px !default;
+
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: $space-6 $space-5;
+
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+
+  color: $text;
+
+  &__visual {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: $space-4;
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  &__emoji {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  &__title {
+    margin: 0 0 $space-2 0;
+    font-size: 1.06rem;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    color: $text;
+  }
+
+  &__desc {
+    margin: 0 0 $space-4 0;
+    color: $text-muted;
+    font-size: 0.96rem;
+    line-height: 1.55;
+    max-width: 56ch;
+  }
+
+  &__highlight {
+    font-weight: 600;
+    color: $highlight;
+    padding-left: 6px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-3;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__btn {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: $radius-sm;
+    padding: 9px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow 0.14s ease,
+      background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary, 0.28);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &--primary {
+      background: rgba($primary, 0.08);
+      color: $primary;
+      border-color: rgba($primary, 0.22);
+
+      &:hover {
+        background: rgba($primary, 0.12);
+        border-color: rgba($primary, 0.35);
+      }
+      &:active {
+        background: rgba($primary, 0.16);
+      }
+      &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+    }
+
+    &--danger {
+      background: rgba($danger, 0.08);
+      color: $danger;
+      border-color: rgba($danger, 0.22);
+
+      &:hover {
+        background: rgba($danger, 0.12);
+        border-color: rgba($danger, 0.35);
+      }
+      &:active {
+        background: rgba($danger, 0.16);
+      }
+      &:focus-visible {
+        box-shadow: 0 0 0 3px rgba($danger, 0.28);
+      }
+    }
+  }
+
+  &--empty {
+  }
+  &--neutral {
+  }
+  &--error {
+    & > .state-card__title {
+      color: $danger-700;
+    }
+  }
+  &--loading {
+  }
+
+  &__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid $spinner-track;
+    border-top: 3px solid $spinner-head;
+    border-radius: 50%;
+    animation: state-spin 1s linear infinite;
+    margin-bottom: $space-4;
+  }
+}
+
+@keyframes state-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 520px) {
+  .state-card {
+    padding: $space-5 $space-4;
+
+    &__visual {
+      width: 48px;
+      height: 48px;
+      margin-bottom: $space-3;
+    }
+    &__title {
+      font-size: 1rem;
+    }
+    &__desc {
+      font-size: 0.94rem;
+    }
+    &__btn {
+      padding: 8px 12px;
+    }
+  }
+}

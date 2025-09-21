@@ -54,7 +54,9 @@ function StructureDashboard({ children, title }: Props) {
       <div className="structure-dashboard__container">
         <div className="panel-dashboard">
           <div className="e">
-            <h2> Chroma </h2>
+            <Link href="/" className="link-title">
+              <h2 className="link-title__title"> Chroma </h2>
+            </Link>
             <div className="elements-logout">
               <div className="elements">
                 {elementsMemo.map((element, index) => (
