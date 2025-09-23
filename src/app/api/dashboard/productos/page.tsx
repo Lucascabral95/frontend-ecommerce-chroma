@@ -1,5 +1,5 @@
 "use client";
-import { KeyboardEvent, useCallback, useMemo, useState } from "react";
+import { KeyboardEvent, useCallback, useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GoPencil } from "react-icons/go";
 
@@ -18,12 +18,23 @@ import LoadingState from "@/production/Dashboard/components/shared/LoadingState"
 import ErrorState from "@/production/Dashboard/components/shared/ErrorState";
 import EmptyState from "@/production/Dashboard/components/shared/EmptyState";
 import NoResultsState from "@/production/Dashboard/components/shared/NoResultsState";
+import {
+  getBrandNameById,
+  getCategoryById,
+} from "@/Shared/Constants/categories";
 
 const CONDITIONS = { search: true, order: true };
-const HEADERS = ["Nombre", "Precio", "Estado", "Acciones"];
+const HEADERS = [
+  "Nombre",
+  "Precio",
+  "Categoría",
+  "Marca",
+  "Estado",
+  "Acciones",
+];
 const COUNT_LIMIT = 20;
 
-function DashboardProductos() {
+function DashboardProductosContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -34,7 +45,7 @@ function DashboardProductos() {
 
   const currentPage = useMemo(() => {
     const page = searchParams.get("page");
-    return page ? parseInt(page, 10) : 1;
+    return page ? Math.max(1, parseInt(page, 10)) : 1;
   }, [searchParams]);
 
   const paramsProduct: ProductFilter = useMemo(
@@ -48,11 +59,14 @@ function DashboardProductos() {
 
   const { products } = useProducts(undefined, paramsProduct);
 
-  const currentSearchTerm = searchParams.get("name") || "";
-
-  const handlePageChange = useCallback((newPage: number) => {
-    console.log("Página cambiada a:", newPage);
-  }, []);
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      const params = new URLSearchParams(searchParams);
+      params.set("page", newPage.toString());
+      router.push(`?${params.toString()}`);
+    },
+    [searchParams, router]
+  );
 
   const handleAddProduct = useCallback(() => setAddProduct(true), []);
   const handleAddProductClose = useCallback(() => setAddProduct(false), []);
@@ -62,10 +76,16 @@ function DashboardProductos() {
     setDataProduct(product);
   }, []);
 
+  const handleUpdateProductClose = useCallback(() => {
+    setUpdateProduct(false);
+    setDataProduct({} as Product);
+  }, []);
+
   const handleClearSearch = useCallback(() => {
     setSearchName("");
     const params = new URLSearchParams(searchParams);
     params.delete("name");
+    params.set("page", "1");
     router.push(`?${params.toString()}`);
   }, [searchParams, router]);
 
@@ -75,6 +95,7 @@ function DashboardProductos() {
         const params = new URLSearchParams(searchParams);
         if (searchName.trim()) {
           params.set("name", searchName.trim());
+          params.set("page", "1");
         } else {
           params.delete("name");
         }
@@ -83,6 +104,32 @@ function DashboardProductos() {
     },
     [searchParams, router, searchName]
   );
+
+  const tableRows = useMemo(() => {
+    if (!products.data?.products?.length) return [];
+
+    return products.data.products.map((product, index) => (
+      <tr key={product.id || `product-${index}`} className="table-row">
+        <td className="row-data">{product.name}</td>
+        <td className="row-data">${product.basePrice}</td>
+        <td className="row-data">{getCategoryById(product.categoryId)}</td>
+        <td className="row-data">{getBrandNameById(product.brandId)}</td>
+        <td className="row-data">{product.status}</td>
+        <td className="update-delete">
+          <button
+            type="button"
+            className="icono"
+            onClick={() => handleUpdateProduct(product)}
+            aria-label={`Editar producto ${product.name}`}
+          >
+            <GoPencil className="icon" />
+          </button>
+        </td>
+      </tr>
+    ));
+  }, [products.data?.products, handleUpdateProduct]);
+
+  const currentSearchTerm = searchParams.get("name") || "";
 
   if (products.isLoading) {
     return (
@@ -139,26 +186,7 @@ function DashboardProductos() {
         />
       ) : (
         <>
-          <TableDashboard
-            headers={HEADERS}
-            rows={
-              products.data?.products?.map((product, index) => (
-                <tr key={product.id || index} className="table-row">
-                  <td className="row-data">{product.name}</td>
-                  <td className="row-data">${product.basePrice}</td>
-                  <td className="row-data">{product.status}</td>
-                  <td className="update-delete">
-                    <div
-                      className="icono"
-                      onClick={() => handleUpdateProduct(product)}
-                    >
-                      <GoPencil className="icon" />
-                    </div>
-                  </td>
-                </tr>
-              )) || []
-            }
-          />
+          <TableDashboard headers={HEADERS} rows={tableRows} />
 
           {products.data && products.data.totalPages > 1 && (
             <PaginationDashboard
@@ -173,11 +201,19 @@ function DashboardProductos() {
       {addProduct && <AddNewProduct onClose={handleAddProductClose} />}
       {updateProduct && (
         <UpdateProductModal
-          onClose={() => setUpdateProduct(false)}
+          onClose={handleUpdateProductClose}
           userData={dataProduct}
         />
       )}
     </StructureDashboard>
+  );
+}
+
+function DashboardProductos() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <DashboardProductosContent />
+    </Suspense>
   );
 }
 

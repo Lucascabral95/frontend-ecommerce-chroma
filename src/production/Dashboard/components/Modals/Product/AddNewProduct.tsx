@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 
 import StructureModal from "../StructureModal";
 import useProducts from "@/production/Hooks/useProducts";
@@ -7,6 +7,7 @@ import {
   CreateProduct,
   ProductStatusString,
 } from "@/Insfraestructure/Interfaces/products/product.interface";
+import { CATEGORIES } from "@/Shared/Constants/categories";
 
 const TIMEOUT_TOAST = 1600;
 
@@ -20,7 +21,11 @@ function AddNewProduct({ onClose }: Props) {
     description: "",
     basePrice: 0,
     status: ProductStatusString.ACTIVE,
+    categoryId: "",
+    brandId: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
   });
+
+  const categories = useMemo(() => CATEGORIES, []);
 
   const { createProduct } = useProducts();
   const [success, setSuccess] = useState<boolean>(false);
@@ -49,6 +54,7 @@ function AddNewProduct({ onClose }: Props) {
           description: "",
           basePrice: 0,
           status: ProductStatusString.ACTIVE,
+          categoryId: "",
         });
         setSuccess(true);
         setTimeout(() => {
@@ -92,6 +98,23 @@ function AddNewProduct({ onClose }: Props) {
               setDataProduct({ ...dataProduct, description: e.target.value })
             }
           />
+        </div>
+        <div className="form-input-group">
+          <label htmlFor="categoryId">Categoría</label>
+          <select
+            name="categoryId"
+            id="categoryId"
+            value={dataProduct.categoryId}
+            onChange={(e) =>
+              setDataProduct({ ...dataProduct, categoryId: e.target.value })
+            }
+          >
+            {categories.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-input-group">
           <label htmlFor="basePrice">Precio Base</label>

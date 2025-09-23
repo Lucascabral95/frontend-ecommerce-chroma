@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { GoPencil } from "react-icons/go";
 import { CiTrash } from "react-icons/ci";
@@ -41,8 +41,9 @@ const STYLES = {
   },
 } as const;
 
-function DashboardUsuarios() {
+function DashboardUsuariosContent() {
   const searchParams = useSearchParams();
+
   const [modalAddUser, setModalAddUser] = useState(false);
   const [modalUpdateUser, setModalUpdateUser] = useState(false);
   const [searchName, setSearchName] = useState("");
@@ -52,6 +53,12 @@ function DashboardUsuarios() {
       email: "",
       name: "",
     });
+  const [openConfirm, setOpenConfirm] = useState<{ open: boolean; id: string }>(
+    {
+      open: false,
+      id: "",
+    }
+  );
 
   const filter = useMemo(
     () => Object.fromEntries(searchParams),
@@ -76,22 +83,61 @@ function DashboardUsuarios() {
 
   const handleAddUser = useCallback(() => setModalAddUser(true), []);
   const handleAddUserClose = useCallback(() => setModalAddUser(false), []);
+
   const handleUpdateUser = useCallback((data: ResponseUpdateUserInterface) => {
     setSelectedUserData({ ...data });
     setModalUpdateUser(true);
   }, []);
-  const handleClearSearch = useCallback(() => setSearchName(""), []);
 
-  const [openConfirm, setOpenConfirm] = useState<{ open: boolean; id: string }>(
-    {
-      open: false,
-      id: "",
-    }
-  );
+  const handleUpdateUserClose = useCallback(() => {
+    setModalUpdateUser(false);
+    setSelectedUserData({ id: "", email: "", name: "" });
+  }, []);
+
+  const handleClearSearch = useCallback(() => setSearchName(""), []);
 
   const handleDeleteUser = useCallback((id: string) => {
     setOpenConfirm({ open: true, id });
   }, []);
+
+  const handleConfirmDelete = useCallback(() => {
+    deleteUser.mutate(openConfirm.id);
+    setOpenConfirm({ open: false, id: "" });
+  }, [deleteUser, openConfirm.id]);
+
+  const handleCancelDelete = useCallback(() => {
+    setOpenConfirm({ open: false, id: "" });
+  }, []);
+
+  const tableRows = useMemo(() => {
+    if (!filteredUsers.length) return [];
+
+    return filteredUsers.map((user) => (
+      <tr key={user.id || user.email} className="table-row">
+        <td className="row-data">{user.name}</td>
+        <td className="row-data">{user.email}</td>
+        <td className="row-data">{user.roles?.[0]?.role.name || "Sin Rol"}</td>
+        <td className="update-delete">
+          <button
+            type="button"
+            className="icono"
+            onClick={() => handleUpdateUser({ ...user })}
+            aria-label={`Editar usuario ${user.name}`}
+          >
+            <GoPencil className="icon" />
+          </button>
+          <button
+            type="button"
+            className="icono"
+            onClick={() => handleDeleteUser(user.id)}
+            aria-label={`Eliminar usuario ${user.name}`}
+          >
+            <CiTrash className="icon" />
+          </button>
+        </td>
+      </tr>
+    ));
+  }, [filteredUsers, handleUpdateUser, handleDeleteUser]);
 
   if (users.isLoading) {
     return (
@@ -149,38 +195,13 @@ function DashboardUsuarios() {
       {isSearching && !hasSearchResults ? (
         <NoResultsState searchTerm={searchName} onClear={handleClearSearch} />
       ) : (
-        <TableDashboard
-          headers={HEADERS}
-          rows={filteredUsers.map((user, index) => (
-            <tr key={index} className="table-row">
-              <td className="row-data">{user.name}</td>
-              <td className="row-data">{user.email}</td>
-              <td className="row-data">
-                {user.roles?.[0]?.role.name || "Sin Rol"}
-              </td>
-              <td className="update-delete">
-                <div
-                  className="icono"
-                  onClick={() => handleUpdateUser({ ...user })}
-                >
-                  <GoPencil className="icon" />
-                </div>
-                <div
-                  className="icono"
-                  onClick={() => handleDeleteUser(user.id)}
-                >
-                  <CiTrash className="icon" />
-                </div>
-              </td>
-            </tr>
-          ))}
-        />
+        <TableDashboard headers={HEADERS} rows={tableRows} />
       )}
 
       {modalAddUser && <AddUserModal onClose={handleAddUserClose} />}
       {modalUpdateUser && (
         <UpdateUserModal
-          onClose={() => setModalUpdateUser(false)}
+          onClose={handleUpdateUserClose}
           userData={selectedUserData}
         />
       )}
@@ -188,16 +209,20 @@ function DashboardUsuarios() {
         <ConfirmComponent
           title="Eliminar usuario"
           message="¿Estás seguro de eliminar este usuario?"
-          onConfirm={() => {
-            deleteUser.mutate(openConfirm.id);
-            setOpenConfirm({ open: false, id: "" });
-          }}
-          onCancel={() => setOpenConfirm({ open: false, id: "" })}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
           isOpen={openConfirm.open}
-          {...openConfirm}
         />
       )}
     </StructureDashboard>
+  );
+}
+
+function DashboardUsuarios() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <DashboardUsuariosContent />
+    </Suspense>
   );
 }
 

@@ -4,7 +4,6 @@ import {
   FilstersOrdersInterface,
   GetOrdersByUserIdInterface,
   GetOrdersByUserIdInterfaceArray,
-  OrderStatus,
   ResponseCreateOrderInterface,
 } from "@/Insfraestructure/Interfaces/Orders/Orders";
 import { isAxiosError } from "axios";

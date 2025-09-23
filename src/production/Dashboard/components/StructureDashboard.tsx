@@ -1,12 +1,13 @@
 "use client";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaUserAlt } from "react-icons/fa";
 import { AiOutlineProduct } from "react-icons/ai";
 import { MdCategory } from "react-icons/md";
 
 import "./StructureDashboard.scss";
+import useAuthStore from "@/lib/zustand/AuthZustand";
 
 interface Props {
   children: ReactNode;
@@ -41,13 +42,24 @@ const elements: Elements[] = [
   },
 ];
 
+const TIMEOUT_LOGOUT = 1200;
+
 function StructureDashboard({ children, title }: Props) {
   const elementsMemo = useMemo(() => elements, []);
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuthStore();
 
   const isActiveRoute = (url: string): boolean => {
     return pathname === url || pathname.startsWith(`${url}/`);
   };
+
+  const handleLogout = useCallback(() => {
+    logout();
+    setTimeout(() => {
+      router.push("/");
+    }, TIMEOUT_LOGOUT);
+  }, []);
 
   return (
     <div className="structure-dashboard">
@@ -74,7 +86,7 @@ function StructureDashboard({ children, title }: Props) {
               </div>
             </div>
           </div>
-          <div className="button-logout">
+          <div className="button-logout" onClick={handleLogout}>
             <button>Logout</button>
           </div>
         </div>
