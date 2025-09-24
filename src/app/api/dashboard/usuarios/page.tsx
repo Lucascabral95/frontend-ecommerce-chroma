@@ -53,6 +53,7 @@ function DashboardUsuariosContent() {
       email: "",
       name: "",
     });
+
   const [openConfirm, setOpenConfirm] = useState<{ open: boolean; id: string }>(
     {
       open: false,
