@@ -8,9 +8,9 @@ import ProductByIdError from "@/production/ProductById/ProductByIdError";
 import ProductByIdLoading from "@/production/ProductById/ProductByIdLoading";
 import { getCartByUserId } from "@/lib/CartsApi";
 import { useCartStore } from "@/lib/zustand/CartZustand";
-import "./CartPage.scss";
 import { useSEO } from "@/production/Hooks/useSEO";
 import SEO from "@/production/components/SEO";
+import "./CartPage.scss";
 
 type LoadingState = "idle" | "loading" | "success" | "error" | "empty";
 

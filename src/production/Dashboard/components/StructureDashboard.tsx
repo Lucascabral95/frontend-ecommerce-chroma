@@ -2,50 +2,20 @@
 import { ReactNode, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FaUserAlt } from "react-icons/fa";
-import { AiOutlineProduct } from "react-icons/ai";
-import { MdCategory } from "react-icons/md";
 
-import "./StructureDashboard.scss";
 import useAuthStore from "@/lib/zustand/AuthZustand";
+import { elementsDashboard } from "@/Shared/Constants/ElementsDashboard";
+import "./StructureDashboard.scss";
 
 interface Props {
   children: ReactNode;
   title: string;
 }
 
-interface Elements {
-  id: number;
-  name: string;
-  url: string;
-  icon: ReactNode;
-}
-
-const elements: Elements[] = [
-  {
-    id: 1,
-    name: "Usuarios",
-    url: "/api/dashboard/usuarios",
-    icon: <FaUserAlt className="icon" />,
-  },
-  {
-    id: 2,
-    name: "Productos",
-    url: "/api/dashboard/productos",
-    icon: <AiOutlineProduct className="icon" />,
-  },
-  {
-    id: 3,
-    name: "Categorias",
-    url: "/api/dashboard/categorias",
-    icon: <MdCategory className="icon" />,
-  },
-];
-
 const TIMEOUT_LOGOUT = 1200;
 
 function StructureDashboard({ children, title }: Props) {
-  const elementsMemo = useMemo(() => elements, []);
+  const elementsMemo = useMemo(() => elementsDashboard, []);
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuthStore();
@@ -59,7 +29,7 @@ function StructureDashboard({ children, title }: Props) {
     setTimeout(() => {
       router.push("/");
     }, TIMEOUT_LOGOUT);
-  }, []);
+  }, [logout, router]);
 
   return (
     <div className="structure-dashboard">

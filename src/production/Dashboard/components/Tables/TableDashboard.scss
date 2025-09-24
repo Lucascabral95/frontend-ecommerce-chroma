@@ -107,7 +107,6 @@
   }
 }
 
-/* Celdas y acciones */
 .table-row {
   .row-data {
     padding: 0.9rem 1rem;
@@ -115,7 +114,49 @@
     font-size: 0.9rem;
     color: color-mix(in srgb, var(--text), #000 10%);
 
-    /* Opcional: enfatizar primera columna (Nombre) */
+    &--strong {
+      color: #111827;
+      font-weight: 600;
+    }
+  }
+
+  .row-data__stock {
+    user-select: none;
+    margin: 0.9rem 1rem;
+    padding: 2px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: color-mix(in srgb, var(--text), #000 10%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    width: fit-content;
+    border-radius: 6px;
+
+    .icono {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      .icon {
+        color: black;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 8px;
+      color: black;
+    }
+
     &--strong {
       color: #111827;
       font-weight: 600;
@@ -126,6 +167,14 @@
     padding: 0.9rem 1rem;
     text-align: right;
     white-space: nowrap;
+
+    .button-view-variants {
+      color: white;
+      background-color: var(--primary);
+      border-radius: var(--radius-6);
+      padding: 0.5rem 1rem;
+      margin-right: 0.4rem;
+    }
 
     .icono {
       display: inline-flex;

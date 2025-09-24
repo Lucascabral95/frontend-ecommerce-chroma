@@ -1,5 +1,7 @@
 "use client";
 import { KeyboardEvent, useCallback, useMemo, useState, Suspense } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GoPencil } from "react-icons/go";
 
@@ -25,6 +27,7 @@ import {
 
 const CONDITIONS = { search: true, order: true };
 const HEADERS = [
+  "Imagen",
   "Nombre",
   "Precio",
   "Categoría",
@@ -110,12 +113,27 @@ function DashboardProductosContent() {
 
     return products.data.products.map((product, index) => (
       <tr key={product.id || `product-${index}`} className="table-row">
+        <td className="row-data">
+          <Image
+            width={75}
+            height={75}
+            src={product?.images[0]?.url || "/img/product-image-not-found.webp"}
+            alt={product.name}
+            className="product-image"
+          />
+        </td>
         <td className="row-data">{product.name}</td>
         <td className="row-data">${product.basePrice}</td>
         <td className="row-data">{getCategoryById(product.categoryId)}</td>
         <td className="row-data">{getBrandNameById(product.brandId)}</td>
         <td className="row-data">{product.status}</td>
         <td className="update-delete">
+          <Link
+            href={`/api/dashboard/productos/variantes/${product.id}`}
+            className="button-view-variants"
+          >
+            Ver variantes
+          </Link>
           <button
             type="button"
             className="icono"

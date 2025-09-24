@@ -10,8 +10,11 @@ interface Props {
 
 function StructureModal({ close, title, children }: Props) {
   return (
-    <div className="structure-modal">
-      <div className="structure-modal__container">
+    <div className="structure-modal" onClick={close}>
+      <div
+        className="structure-modal__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="button-close">
           <button onClick={close}>
             <IoMdClose className="icon" />
