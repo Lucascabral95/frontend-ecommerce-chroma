@@ -14,7 +14,7 @@ const TIMEOUT_TOAST = 1200;
 
 const initialDataCategory: CreateCategoryInterface = {
   name: "",
-  parentId: "",
+  parentId: undefined,
 };
 
 function AddCategory({ onClose }: Props) {
@@ -53,7 +53,7 @@ function AddCategory({ onClose }: Props) {
       createNewCategory.mutate(
         {
           name: dataCategory.name.trim(),
-          parentId: dataCategory.parentId,
+          parentId: dataCategory.parentId || undefined,
         },
         {
           onSuccess: () => {
@@ -105,7 +105,7 @@ function AddCategory({ onClose }: Props) {
             name="parentId"
             id="parentId"
             onFocus={clearError}
-            value={dataCategory.parentId}
+            value={dataCategory.parentId || undefined}
             onChange={handleInputChange}
             disabled={isSubmitting}
           >

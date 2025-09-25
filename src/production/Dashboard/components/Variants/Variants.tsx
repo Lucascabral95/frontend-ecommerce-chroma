@@ -11,6 +11,8 @@ import "./Variants.scss";
 import useProductVariants from "@/production/Hooks/useProductVariants";
 import Toast from "@/Shared/Components/Toast";
 import useToast from "@/Shared/hooks/useToast";
+import { OpenConfirmInterface } from "@/Shared/Interfaces/open-confirm-interface";
+import ConfirmComponent from "../Confirm/Confirm";
 
 interface Props {
   variants?: Variant[];
@@ -42,6 +44,10 @@ function Variants({ variants, title, productId }: Props) {
   const { updateProductVariant, deleteProductVariant } = useProductVariants(
     productId!
   );
+  const [openConfirm, setOpenConfirm] = useState<OpenConfirmInterface>({
+    open: false,
+    id: "",
+  });
 
   const [modalState, setModalState] = useState<ModalState>({
     isAddModalOpen: false,
@@ -119,11 +125,20 @@ function Variants({ variants, title, productId }: Props) {
     }));
   }, []);
 
+  const handleConfirmDelete = useCallback((variant: Variant) => {
+    setOpenConfirm({ open: true, id: variant.id });
+  }, []);
+
+  const handleCancelDelete = useCallback(() => {
+    setOpenConfirm({ open: false, id: "" });
+  }, []);
+
   const handleDeleteProductVariant = useCallback(
-    (variant: Variant) => {
-      deleteProductVariant.mutate(variant.id, {
+    (id: string) => {
+      deleteProductVariant.mutate(id, {
         onSuccess: () => {
-          showToast(`Variante ${variant.sku} eliminada exitosamente`, false);
+          setOpenConfirm({ open: false, id: "" });
+          showToast(`Variante ${id} eliminada exitosamente`, false);
         },
         onError: (error) => {
           showToast(`Error al eliminar la variante: ${error.message}`, true);
@@ -168,7 +183,7 @@ function Variants({ variants, title, productId }: Props) {
           <button
             type="button"
             className="icono"
-            onClick={() => handleDeleteProductVariant(variant)}
+            onClick={() => handleConfirmDelete(variant)}
             aria-label={`Eliminar producto ${variant.sku}`}
           >
             <GoTrash className="icon" />
@@ -225,6 +240,16 @@ function Variants({ variants, title, productId }: Props) {
       )}
 
       {toastComponent}
+
+      {openConfirm.open && (
+        <ConfirmComponent
+          title="Eliminar variante"
+          message="¿Estás seguro de eliminar esta variante?"
+          onConfirm={() => handleDeleteProductVariant(openConfirm.id)}
+          onCancel={handleCancelDelete}
+          isOpen={openConfirm.open}
+        />
+      )}
     </div>
   );
 }

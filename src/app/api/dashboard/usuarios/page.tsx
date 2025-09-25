@@ -41,12 +41,17 @@ const STYLES = {
   },
 } as const;
 
+interface OpenConfirmInterface {
+  open: boolean;
+  id: string;
+}
+
 function DashboardUsuariosContent() {
   const searchParams = useSearchParams();
 
-  const [modalAddUser, setModalAddUser] = useState(false);
-  const [modalUpdateUser, setModalUpdateUser] = useState(false);
-  const [searchName, setSearchName] = useState("");
+  const [modalAddUser, setModalAddUser] = useState<boolean>(false);
+  const [modalUpdateUser, setModalUpdateUser] = useState<boolean>(false);
+  const [searchName, setSearchName] = useState<string>("");
   const [selectedUserData, setSelectedUserData] =
     useState<ResponseUpdateUserInterface>({
       id: "",
@@ -54,12 +59,10 @@ function DashboardUsuariosContent() {
       name: "",
     });
 
-  const [openConfirm, setOpenConfirm] = useState<{ open: boolean; id: string }>(
-    {
-      open: false,
-      id: "",
-    }
-  );
+  const [openConfirm, setOpenConfirm] = useState<OpenConfirmInterface>({
+    open: false,
+    id: "",
+  });
 
   const filter = useMemo(
     () => Object.fromEntries(searchParams),

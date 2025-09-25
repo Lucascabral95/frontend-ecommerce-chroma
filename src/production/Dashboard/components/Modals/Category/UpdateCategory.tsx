@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 import { CategoryInterface } from "@/Insfraestructure/Interfaces/Resources/Categories-interface";
 import StructureModal from "../StructureModal";
@@ -26,7 +26,7 @@ function UpdateModalCategory({ onClose, categoryData }: Props) {
 
   const handleFieldChange = useCallback(
     (field: keyof CategoryInterface) =>
-      (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setCategoryOldData((prev) => ({ ...prev, [field]: e.target.value }));
         if (error) setError("");
       },
@@ -44,7 +44,7 @@ function UpdateModalCategory({ onClose, categoryData }: Props) {
 
       const updateData = {
         name: categoryOldData.name.trim(),
-        parentId: categoryOldData.parentId || "",
+        parentId: categoryOldData.parentId || null,
       };
 
       console.log(updateData);

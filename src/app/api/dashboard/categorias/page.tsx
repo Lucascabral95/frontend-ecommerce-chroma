@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useMemo, useState } from "react";
 import { GoPencil } from "react-icons/go";
+import { CiTrash } from "react-icons/ci";
 
 import StructureDashboard from "@/production/Dashboard/components/StructureDashboard";
 import { CategoryInterface } from "@/Insfraestructure/Interfaces/Resources/Categories-interface";
@@ -12,8 +13,8 @@ import TableDashboard from "@/production/Dashboard/components/Tables/TableDashbo
 import EmptyState from "@/production/Dashboard/components/shared/EmptyState";
 import AddCategory from "@/production/Dashboard/components/Modals/Category/AddCategory";
 import UpdateModalCategory from "@/production/Dashboard/components/Modals/Category/UpdateCategory";
-import { CiTrash } from "react-icons/ci";
 import Toast from "@/Shared/Components/Toast";
+import ConfirmComponent from "@/production/Dashboard/components/Confirm/Confirm";
 
 const CONDITIONS = { search: true, order: false } as const;
 const HEADERS = ["Nombre", "Slug", "Categoría Padre", "Acciones"];
@@ -37,11 +38,11 @@ const useFilteredCategories = (
 const CategoryTableRows = ({
   categories,
   onUpdateCategory,
-  handleDeleteCategory,
+  handleConfirmDelete,
 }: {
   categories: any[];
   onUpdateCategory: (category: CategoryInterface) => void;
-  handleDeleteCategory: (id: string) => void;
+  handleConfirmDelete: (id: string) => void;
 }) => {
   return useMemo(() => {
     if (!categories.length) return [];
@@ -58,7 +59,7 @@ const CategoryTableRows = ({
             type="button"
             className="icono"
             aria-label={`Eliminar categoria ${category.name}`}
-            onClick={() => handleDeleteCategory(category.id)}
+            onClick={() => handleConfirmDelete(category.id)}
           >
             <CiTrash className="icon" />
           </button>
@@ -88,6 +89,18 @@ function DashboardCategorias() {
     message: "",
     error: false,
   });
+  const [openConfirm, setOpenConfirm] = useState({
+    open: false,
+    id: "",
+  });
+
+  const handleConfirmDelete = useCallback((id: string) => {
+    setOpenConfirm({ open: true, id });
+  }, []);
+
+  const handleCancelDelete = useCallback(() => {
+    setOpenConfirm({ open: false, id: "" });
+  }, []);
 
   const filteredCategories = useFilteredCategories(
     categories.data ?? [],
@@ -110,6 +123,7 @@ function DashboardCategorias() {
     (id: string) => {
       deleteCategory.mutate(id, {
         onSuccess: () => {
+          setOpenConfirm({ open: false, id: "" });
           setToast({
             message: "Categoria eliminada exitosamente",
             error: false,
@@ -151,7 +165,7 @@ function DashboardCategorias() {
         <CategoryTableRows
           categories={filteredCategories}
           onUpdateCategory={onUpdateCategory}
-          handleDeleteCategory={handleDeleteCategory}
+          handleConfirmDelete={handleConfirmDelete}
         />
       ) : (
         []
@@ -188,52 +202,39 @@ function DashboardCategorias() {
     onUpdateCategory,
   ]);
 
-  const openAddCategory = () => {
-    return (
-      <>
-        {isOpenUpdateOrCreate.isAdd && (
-          <AddCategory
-            onClose={() =>
-              setIsOpenUpdateOrCreate({ ...isOpenUpdateOrCreate, isAdd: false })
-            }
-          />
-        )}
-      </>
-    );
-  };
+  //////
+  const handleCloseAdd = useCallback(() => {
+    setIsOpenUpdateOrCreate((prev) => ({ ...prev, isAdd: false }));
+  }, []);
 
-  const openUpdateCategory = () => {
-    return (
-      <>
-        {isOpenUpdateOrCreate.isUpdate && (
-          <UpdateModalCategory
-            onClose={() =>
-              setIsOpenUpdateOrCreate({
-                ...isOpenUpdateOrCreate,
-                isUpdate: false,
-              })
-            }
-            categoryData={dataCat!}
-          />
-        )}
-      </>
-    );
-  };
-
-  const openToast = () => {
-    return (
-      <>
-        {toast.message && <Toast message={toast.message} error={toast.error} />}
-      </>
-    );
-  };
+  const handleCloseUpdate = useCallback(() => {
+    setIsOpenUpdateOrCreate((prev) => ({ ...prev, isUpdate: false }));
+  }, []);
 
   return (
     <StructureDashboard title="Categorias">
       {renderContent}
-      {openAddCategory()}
-      {openUpdateCategory()}
-      {openToast()}
+
+      {isOpenUpdateOrCreate.isAdd && <AddCategory onClose={handleCloseAdd} />}
+
+      {isOpenUpdateOrCreate.isUpdate && (
+        <UpdateModalCategory
+          onClose={handleCloseUpdate}
+          categoryData={dataCat!}
+        />
+      )}
+
+      {openConfirm.open && (
+        <ConfirmComponent
+          title="Eliminar categoria"
+          message="¿Estás seguro de eliminar esta categoria?"
+          onConfirm={() => handleDeleteCategory(openConfirm.id)}
+          onCancel={handleCancelDelete}
+          isOpen={openConfirm.open}
+        />
+      )}
+
+      {toast.message && <Toast message={toast.message} error={toast.error} />}
     </StructureDashboard>
   );
 }
