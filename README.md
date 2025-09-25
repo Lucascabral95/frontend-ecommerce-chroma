@@ -21,10 +21,13 @@
 - **Experiencia de Usuario Premium:** UI responsiva, accesible y moderna, animaciones suaves, modo oscuro y componentes reutilizables.
 - **Gestión de Errores y Feedback:** Manejo global de errores, notificaciones contextuales y validación de formularios reactivos con mensajes personalizados.
 - **Optimización de Performance:** Server-Side Rendering, Image Optimization, lazy loading y caching inteligente con Next.js.
+- **Gestión de Productos:** Visualización de catálogo, filtrado avanzado, paginación, búsqueda, detalles de productos con variantes (tallas, colores) y control de stock.
 - **Cache Parametrizado Avanzado:** TanStack Query con indexación por query keys únicos, invalidación selectiva y persistencia multi-filtro para optimización de rendimiento empresarial.
 - **Seguridad:** Protección avanzada de rutas, validación de datos y sanitización de inputs.
 - **Testing Extensivo:** Pruebas unitarias y de integración con alta cobertura, asegurando calidad y estabilidad continua.
 - **Integración CI/CD:** Listo para despliegue automatizado en entornos productivos usando Docker y pipelines modernos.
+- **Documentación:** Documentación detallada de la API, componentes y funcionalidades.
+- **Panel de Dashboard Administrativo:** Área personalizada para gestión avanzada de productos, categorías y usuarios.
 
 ---
 
@@ -93,6 +96,26 @@ Para probar diferentes escenarios, puedes usar estos nombres de titular:
 - Verificá que el webhook responda correctamente en el backend
 - Comprobá que las notificaciones por email se envíen apropiadamente
 - Testeá la sincronización del estado de la orden en tiempo real
+
+---
+
+## ⚙️ Prueba de CRUD en panel de administración de Admin
+
+Para probar la funcionalidad de CRUD en el panel de administración de Admin, seguí los siguientes pasos:
+
+### 🔐 Credenciales de Prueba de Admin
+
+- **Usuario:** `lucas@hotmail.com`
+- **Contraseña:** `123456`
+
+### 📋 Proceso de Prueba
+
+1. Iniciá sesión en el login con las credencial de Admin
+2. Navegá a la ruta /api/dashboard/usuarios
+3. Verificá que puedas acceder al panel de administración
+4. Verificá que puedas agregar, editar y eliminar categorías
+5. Verificá que puedas agregar, editar y eliminar productos y variantes de ellos
+6. Verificá que puedas agregar, editar y eliminar usuarios
 
 ---
 
@@ -173,39 +196,55 @@ npm run start
 ## Estructura del proyecto
 
 ```bash
-│
 ├── src/
 │   ├── app/
-│   │   ├── checkout/           # Flujo de pago
-│   │   │   ├── cart/           # Página del carrito
-│   │   │   └── page.tsx        # Página principal de checkout
-│   │   ├── customer/           # Área de cliente
-│   │   ├── orders/             # Gestión de pedidos
-│   │   ├── product/            # Páginas de productos
-│   │   ├── section/            # Secciones de la página
-│   │   ├── globals.css         # Estilos globales
-│   │   ├── layout.tsx          # Layout principal
-│   │   └── page.tsx            # Página de inicio
+│   │   ├── api/                     # Rutas de API para el dashboard
+│   │   │   └── dashboard/           # Rutas del dashboard
+│   │   │       ├── categorias/      # Rutas para gestión de categorías
+│   │   │       ├── productos/       # Rutas para gestión de productos
+│   │   │       │   └── variantes/   # Gestión de variantes de productos
+│   │   │       │       └── [productid]/  # Rutas dinámicas por ID de producto
+│   │   │       └── usuarios/        # Endpoints para gestión de usuarios
+│   │   ├── checkout/                # Flujo de pago
+│   │   │   ├── cart/                # Página del carrito
+│   │   │   └── page.tsx             # Página principal de checkout
+│   │   ├── customer/                # Área de cliente
+│   │   ├── orders/                  # Gestión de pedidos
+│   │   │   ├── detail/              # Detalle de pedidos
+│   │   │   │   └── [id]/            # Rutas dinámicas por ID de pedido
+│   │   │   │       └── page.tsx     # Página de detalle de pedido por ID
+│   │   │   └── record/              # Registro de pedidos
+│   │   ├── product/                 # Páginas de productos
+│   │   │   ├── [id]/                # Rutas dinámicas por ID de producto
+│   │   │   └── page.tsx             # Página principal de productos
+│   │   ├── section/                 # Secciones de la página
+│   │   │   ├── product/             # Secciones de productos
+│   │   │   │   └── [category]/      # Rutas dinámicas por categoría
+│   │   │   └── page.tsx             # Página principal de secciones
+│   │   ├── globals.css              # Estilos globales
+│   │   ├── layout.tsx               # Layout principal
+│   │   └── page.tsx                 # Página de inicio
 │   │
-│   ├── Insfrastructure/        # Estructura de insfraestructura como interfaces, enums, configuracion de TanStack Query, de axios, etc
-│   ├── production/             # Componentes reutilizables
-│   ├── providers/              # Proveedores de contexto globales
-│   ├── shared/                 # Componentes estructurales y reutilizables globales
-│   ├── lib/                    # Utilidades y configuraciones
-│   │   ├── api/                # Clientes de API
-│   │   └── zustand/            # Stores de estado global
-│   ├── middleware.ts           # Middleware de Next.js encargado de proteger rutas
-│   │
-│   ├── styles/                 # Estilos globales
-│   └── public/                 # Assets estáticos
+│   ├── Infrastructure/              # Estructura de infraestructura
+│   │                               # Interfaces, enums, configuración de TanStack Query, axios, etc
+│   ├── production/                  # Componentes reutilizables
+│   ├── providers/                   # Proveedores de contexto globales
+│   ├── shared/                      # Componentes estructurales y reutilizables globales
+│   ├── lib/                         # Utilidades y configuraciones
+│   │   ├── api/                     # Clientes de API
+│   │   └── zustand/                 # Stores de estado global
+│   ├── styles/                      # Estilos globales
+│   ├── public/                      # Assets estáticos
+│   └── middleware.ts                # Middleware de Next.js para proteger rutas
 │
-├── .vscode/                    # Configuración de VSCode
-├── .eslintrc.js                # Configuración de ESLint
-├── next.config.js              # Configuración de Next.js
-├── package.json                # Dependencias y scripts
-├── tailwind.config.js          # Configuración de Tailwind
-├── tsconfig.json               # Configuración de TypeScript
-└── README.md                   # Documentación
+├── .vscode/                         # Configuración de VSCode
+├── .eslintrc.js                     # Configuración de ESLint
+├── next.config.js                   # Configuración de Next.js
+├── package.json                     # Dependencias y scripts
+├── tailwind.config.js               # Configuración de Tailwind
+├── tsconfig.json                    # Configuración de TypeScript
+└── README.md                        # Documentación
+
 ```
 
 ## Contribuciones
