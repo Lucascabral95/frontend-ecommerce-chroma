@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState, useEffect, useMemo } from "react";
+import { FormEvent, useState, useEffect, useMemo, useCallback } from "react";
 
 import EstructureCartCheckoutProfile from "@/production/components/EstructureCartCheckoutProfile/EstructureCartCheckoutProfile";
 import {
@@ -22,10 +22,15 @@ const TIME_TO_CLOSE_TOAST = 1800;
 const ProfilePage = () => {
   const { userDataSession } = useAuthStore();
   const myId = String(userDataSession?.id);
+
   const [errors, setErrors] = useState<{ message: string; status: string }>({
     message: "",
     status: "",
   });
+
+  const [hasExistingAddress, setHasExistingAddress] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
 
   const useData = useSEO({
     title: "Mi Perfil - Gestionar Datos Personales - Chroma",
@@ -60,45 +65,19 @@ const ProfilePage = () => {
     error: false,
   });
 
-  const saveAddress = async (e: FormEvent<HTMLFormElement>) => {
+  const showToast = useCallback((message: string, isError: boolean = false) => {
+    setToastMessage({ message, error: isError });
+    setTimeout(() => {
+      setToastMessage({ message: "", error: false });
+    }, TIME_TO_CLOSE_TOAST);
+  }, []);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      const res = await createAddress(myId, {
-        userId: myId,
-        ...dataAddres,
-      });
-
-      if (res) {
-        setDataAddres(initialDataAddres);
-
-        setToastMessage({
-          message: "Dirección guardada exitosamente",
-          error: false,
-        });
-
-        setTimeout(() => {
-          setToastMessage({ message: "", error: false });
-        }, TIME_TO_CLOSE_TOAST);
-      }
-    } catch (error) {
-      setToastMessage({
-        message: "Error al guardar la dirección",
-        error: true,
-      });
-      setTimeout(() => {
-        setToastMessage({ message: "", error: false });
-      }, TIME_TO_CLOSE_TOAST);
-    }
-  };
-
-  const updateAddress = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const {} = dataAddres;
-
-      const res = await updateAddressById(myId, {
+      const cleanAddressData = {
         userId: myId,
         firstName: dataAddres.firstName,
         lastName: dataAddres.lastName,
@@ -108,40 +87,119 @@ const ProfilePage = () => {
         state: dataAddres.state,
         postalCode: dataAddres.postalCode,
         country: dataAddres.country,
-      });
+      };
 
-      if (res) {
-        setToastMessage({
-          message: "Dirección guardada exitosamente",
-          error: false,
-        });
-
-        setTimeout(() => {
-          setToastMessage({ message: "", error: false });
-        }, TIME_TO_CLOSE_TOAST);
+      let res;
+      if (hasExistingAddress) {
+        const updateData = {
+          firstName: dataAddres.firstName,
+          lastName: dataAddres.lastName,
+          phone: dataAddres.phone,
+          street1: dataAddres.street1,
+          city: dataAddres.city,
+          state: dataAddres.state,
+          postalCode: dataAddres.postalCode,
+          country: dataAddres.country,
+        };
+        res = await updateAddressById(myId, updateData);
+        showToast("Dirección actualizada exitosamente", false);
+      } else {
+        res = await createAddress(myId, cleanAddressData);
+        setHasExistingAddress(true);
+        showToast("Dirección creada exitosamente", false);
       }
-    } catch (error) {
-      setToastMessage({
-        message: "Error al guardar la dirección",
-        error: true,
-      });
-      setTimeout(() => {
-        setToastMessage({ message: "", error: false });
-      }, TIME_TO_CLOSE_TOAST);
+
+      if (!res) {
+        throw new Error("No se recibió respuesta del servidor");
+      }
+    } catch (error: any) {
+      console.error("Error al guardar la dirección:", error);
+
+      if (
+        hasExistingAddress &&
+        (error.status === 404 || error.status === "404")
+      ) {
+        try {
+          console.log("PATCH falló, intentando POST...");
+          const fallbackData = {
+            userId: myId,
+            firstName: dataAddres.firstName,
+            lastName: dataAddres.lastName,
+            phone: dataAddres.phone,
+            street1: dataAddres.street1,
+            city: dataAddres.city,
+            state: dataAddres.state,
+            postalCode: dataAddres.postalCode,
+            country: dataAddres.country,
+          };
+          const fallbackRes = await createAddress(myId, fallbackData);
+          if (fallbackRes) {
+            setHasExistingAddress(true);
+            showToast("Dirección creada exitosamente", false);
+          }
+        } catch (fallbackError) {
+          console.error("Error en fallback POST:", fallbackError);
+          showToast("Error al guardar la dirección", true);
+        }
+      } else {
+        showToast("Error al guardar la dirección", true);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    getAddressByUserId(myId)
-      .then((res: GetAddressByUserIdInterface) => {
-        setDataAddres(res.firstAddress ?? initialDataAddres);
-        console.log(res.firstAddress);
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrors({ message: error.message, status: error.status });
-      });
+  const loadUserAddress = useCallback(async () => {
+    if (!myId) return;
+
+    setIsInitialLoad(true);
+    setErrors({ message: "", status: "" });
+
+    try {
+      const res: GetAddressByUserIdInterface = await getAddressByUserId(myId);
+
+      if (res.firstAddress && Object.keys(res.firstAddress).length > 0) {
+        const hasValidData = Object.values(res.firstAddress).some(
+          (value) => value && value.toString().trim() !== ""
+        );
+
+        if (hasValidData) {
+          setDataAddres(res.firstAddress);
+          setHasExistingAddress(true);
+        } else {
+          setDataAddres(initialDataAddres);
+          setHasExistingAddress(false);
+        }
+      } else {
+        setDataAddres(initialDataAddres);
+        setHasExistingAddress(false);
+      }
+    } catch (error: any) {
+      console.error("Error al cargar dirección:", error);
+      setDataAddres(initialDataAddres);
+      setHasExistingAddress(false);
+
+      if (error.status !== 404 && error.status !== "404") {
+        setErrors({
+          message: error.message || "Error al cargar los datos",
+          status: error.status || "500",
+        });
+      }
+    } finally {
+      setIsInitialLoad(false);
+    }
   }, [myId, initialDataAddres]);
+
+  useEffect(() => {
+    loadUserAddress();
+  }, [loadUserAddress]);
+
+  const handleInputChange = useCallback(
+    (field: keyof AddressInterface, value: string) => {
+      setDataAddres((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
   return (
     <EstructureCartCheckoutProfile
@@ -157,10 +215,7 @@ const ProfilePage = () => {
             description={"Algo salió mal. Intentalo de nuevo más tarde."}
           />
         ) : (
-          <form
-            className="form"
-            onSubmit={dataAddres.city ? updateAddress : saveAddress}
-          >
+          <form className="form" onSubmit={handleSubmit}>
             <div className="form-group-pair">
               <div className="form-group">
                 <label htmlFor="firstName">Nombre</label>
@@ -170,8 +225,9 @@ const ProfilePage = () => {
                   id="firstName"
                   placeholder="Lucas"
                   onChange={(e) =>
-                    setDataAddres({ ...dataAddres, firstName: e.target.value })
+                    handleInputChange("firstName", e.target.value)
                   }
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
@@ -183,8 +239,9 @@ const ProfilePage = () => {
                   id="lastName"
                   placeholder="Cabral"
                   onChange={(e) =>
-                    setDataAddres({ ...dataAddres, lastName: e.target.value })
+                    handleInputChange("lastName", e.target.value)
                   }
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
@@ -197,9 +254,8 @@ const ProfilePage = () => {
                   type="text"
                   id="phone"
                   placeholder="11-****-****"
-                  onChange={(e) =>
-                    setDataAddres({ ...dataAddres, phone: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
@@ -210,9 +266,8 @@ const ProfilePage = () => {
                   type="text"
                   id="street1"
                   placeholder="Av. Siempreviva"
-                  onChange={(e) =>
-                    setDataAddres({ ...dataAddres, street1: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("street1", e.target.value)}
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
@@ -225,22 +280,20 @@ const ProfilePage = () => {
                   type="text"
                   id="city"
                   placeholder="Tigre"
-                  onChange={(e) =>
-                    setDataAddres({ ...dataAddres, city: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("city", e.target.value)}
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="state">Estado</label>
+                <label htmlFor="state">Provincia</label>
                 <input
                   value={dataAddres.state}
                   type="text"
                   id="state"
                   placeholder="Buenos Aires"
-                  onChange={(e) =>
-                    setDataAddres({ ...dataAddres, state: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("state", e.target.value)}
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
@@ -254,8 +307,9 @@ const ProfilePage = () => {
                   id="postalCode"
                   placeholder="B2020"
                   onChange={(e) =>
-                    setDataAddres({ ...dataAddres, postalCode: e.target.value })
+                    handleInputChange("postalCode", e.target.value)
                   }
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
@@ -266,16 +320,19 @@ const ProfilePage = () => {
                   type="text"
                   id="country"
                   placeholder="Argentina"
-                  onChange={(e) =>
-                    setDataAddres({ ...dataAddres, country: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange("country", e.target.value)}
+                  disabled={isLoading || isInitialLoad}
                   required
                 />
               </div>
             </div>
             <div className="form-group-button">
-              <button type="submit">
-                {dataAddres.street1 !== ""
+              <button type="submit" disabled={isLoading || isInitialLoad}>
+                {isLoading
+                  ? "GUARDANDO..."
+                  : isInitialLoad
+                  ? "CARGANDO..."
+                  : hasExistingAddress
                   ? "ACTUALIZAR DATOS"
                   : "GUARDAR DATOS"}
               </button>

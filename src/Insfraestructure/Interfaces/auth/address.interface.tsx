@@ -22,11 +22,20 @@ export interface ResponseAddressInterface {
   postalCode: string;
   country: string;
   isDefault: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export type UpdateAddressInterface = Partial<AddressInterface>;
+export interface UpdateAddressInterface {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  street1: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
 
 // Obtener direcciones por userId
 export interface GetAddressByUserIdInterface {

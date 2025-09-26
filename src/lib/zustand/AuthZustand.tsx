@@ -129,6 +129,8 @@ const useAuthStore = create<AuthStore>((set, get) => ({
       userDataSession: null,
     });
 
+    window.location.href = "/";
+
     import("@/lib/zustand/CartZustand").then(({ useCartStore }) => {
       const { resetCart } = useCartStore.getState();
       resetCart();
