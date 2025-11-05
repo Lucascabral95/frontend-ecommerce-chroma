@@ -49,7 +49,6 @@ function FilterProducts({ setOpenFilters }: Props) {
       params.set("categoryId", priceCount.categories);
     }
 
-    // const currentPath = window.location.pathname;
     router.push(`/section/product?${params.toString()}`);
     setOpenFilters(false);
   };

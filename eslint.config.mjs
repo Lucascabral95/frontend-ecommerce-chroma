@@ -30,6 +30,8 @@ const eslintConfig = [
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/prefer-as-const": "warn",
+      "@typescript-eslint/no-require-imports": "off",
+      "@next/next/no-img-element": "off",
     },
   },
 ];

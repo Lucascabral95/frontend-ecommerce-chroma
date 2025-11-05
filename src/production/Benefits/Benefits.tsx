@@ -1,14 +1,13 @@
 import React from "react";
-
-import "./Benefits.scss";
-
-import SectionStructure from "../Section/SectionStructure";
+import Link from "next/link";
+import Image from "next/image";
 import { FiTruck } from "react-icons/fi";
 import { MdOutlineStorefront } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
-import Image from "next/image";
-import Link from "next/link";
+
+import SectionStructure from "../Section/SectionStructure";
 import BenefitsMobile from "./BenefitsMobile";
+import "./Benefits.scss";
 
 interface Benefits {
   icon: React.ReactNode;

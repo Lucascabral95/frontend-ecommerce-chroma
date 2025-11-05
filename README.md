@@ -168,11 +168,17 @@ npm install
 cp .env.template
 ```
 
-4. **Configura Tailwind y estilos:**
+4. **Testing avanzado:**
+
+- Ejecutá las pruebas con `npm test` para verificar que todo funciona correctamente.
+- Usa `npm run test:watch` para ejecutar pruebas en modo observación.
+- Ejecutá `npm run test:coverage` para generar reportes de cobertura.
+
+5. **Configura Tailwind y estilos:**
 
 - Tailwind ya está preconfigurado en `tailwind.config.js` y los estilos globales en `src/styles/globals.css`.
 
-5. **Compilá el proyecto:**
+6. **Compilá el proyecto:**
 
 ## Uso
 
